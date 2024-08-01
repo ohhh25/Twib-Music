@@ -66,17 +66,35 @@ class MySpotifyInterfacer: ObservableObject {
         task.resume()
     }
     
+    func parsePlaylists(_ playlists: Array<Dictionary<String, Any>>) {
+        for playlist in playlists {
+            guard let name = playlist["name"] as? String else { return }
+            guard let description = playlist["description"] as? String else { return }
+            guard let tracks = playlist["tracks"] as? Dictionary<String, Any> else { return }
+            guard let tracks_url = tracks["href"] as? String else { return }
+            guard let images = playlist["images"] as? [Dictionary<String, Any>] else { return }
+            guard let image_url = images.first?["url"] as? String else { return }
+            guard let visible = playlist["public"] as? Int else { return }
+            print("Name: \(name), Description \(description), Tracks URL: \(tracks_url), Image URL: \(image_url), Visible: \(visible)")
+        }
+    }
+    
     func fetchPlaylists() {
         // Setup Request
-        guard let url = URL(string: "https://api.spotify.com/v1/me/playlists") else { return }
+        guard let url = URL(string: "https://api.spotify.com/v1/me/playlists?limit=50&offset=0") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         // Big Stuff
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
-                print(json, type(of: json))
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                if let playlists = json["items"] as? [[String: Any]] {
+                    self.parsePlaylists(playlists)
+                }
+                else {
+                    print("Failed to get items from JSON data")
+                }
             }
             else {
                 print("Failed to parse the JSON data")
