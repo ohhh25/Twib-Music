@@ -11,6 +11,7 @@ class MySpotifyInterfacer: ObservableObject {
     private var accessToken: String = ""
     private var refreshToken: String = ""
     private var expirationDate: Date = Date()
+    private var playlists: [Playlist] = []
     
     func saveSession(_ session: SPTSession) {
         self.accessToken = session.accessToken
@@ -66,17 +67,22 @@ class MySpotifyInterfacer: ObservableObject {
         task.resume()
     }
     
-    func parsePlaylists(_ playlists: Array<Dictionary<String, Any>>) {
-        for playlist in playlists {
-            guard let name = playlist["name"] as? String else { return }
-            guard let description = playlist["description"] as? String else { return }
-            guard let tracks = playlist["tracks"] as? Dictionary<String, Any> else { return }
-            guard let tracks_url = tracks["href"] as? String else { return }
-            guard let images = playlist["images"] as? [Dictionary<String, Any>] else { return }
-            guard let image_url = images.first?["url"] as? String else { return }
-            guard let visible = playlist["public"] as? Int else { return }
-            print("Name: \(name), Description \(description), Tracks URL: \(tracks_url), Image URL: \(image_url), Visible: \(visible)")
+    func parsePlaylists(_ array: [[String: Any]]) -> [Playlist] {
+        let parsedPlaylists = array.compactMap { playlist -> Playlist? in
+            guard
+                let name = playlist["name"] as? String,
+                let description = playlist["description"] as? String,
+                let tracks = playlist["tracks"] as? [String: Any],
+                let tracks_url = tracks["href"] as? String,
+                let images = playlist["images"] as? [[String: Any]],
+                let image_url = images.first?["url"] as? String
+            else {
+                return nil
+            }
+            let visible = (playlist["public"] as? Int) ?? -1
+            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible)
         }
+        return parsedPlaylists
     }
     
     func fetchPlaylists() {
@@ -89,8 +95,10 @@ class MySpotifyInterfacer: ObservableObject {
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                if let playlists = json["items"] as? [[String: Any]] {
-                    self.parsePlaylists(playlists)
+                if let items = json["items"] as? [[String: Any]] {
+                    // pass an array of dictionaries get an array of Playlist struct
+                    self.playlists = self.parsePlaylists(items)
+                    print("\(self.playlists.count) Playlists fetched")
                 }
                 else {
                     print("Failed to get items from JSON data")
@@ -103,9 +111,12 @@ class MySpotifyInterfacer: ObservableObject {
     }
 }
 
-struct UserProfile: Codable {
-    let display_name: String
-    let email: String
+struct Playlist {
+    let name: String
+    let description: String
+    let tracks_url: String
+    let image_url: String
+    let visible: Int
 }
 
 var Interfacer = MySpotifyInterfacer()
