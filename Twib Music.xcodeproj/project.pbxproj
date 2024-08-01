@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F41FD3952C4DF0200078ABD0 /* MySpotifyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */; };
 		F476A6692C5ADC6C008F5E53 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F476A6682C5ADC6C008F5E53 /* SpotifyiOS */; };
+		F476A66D2C5AF4D0008F5E53 /* SpotifyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F476A66C2C5AF4D0008F5E53 /* SpotifyService.swift */; };
 		F4B5CC982C598FA100C92977 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4B5CC972C598FA100C92977 /* SpotifyiOS */; };
 		F4B7B4CB2C35235800A348D3 /* Twib_MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */; };
 		F4B7B4CF2C35235900A348D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B7B4CE2C35235900A348D3 /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		F41FD38C2C4C83FD0078ABD0 /* Twib-Music-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Twib-Music-Info.plist"; sourceTree = "<group>"; };
 		F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySpotifyManager.swift; sourceTree = "<group>"; };
+		F476A66C2C5AF4D0008F5E53 /* SpotifyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyService.swift; sourceTree = "<group>"; };
 		F4B7B4C72C35235800A348D3 /* Twib Music.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Twib Music.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Twib_MusicApp.swift; sourceTree = "<group>"; };
 		F4B7B4CE2C35235900A348D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -66,9 +68,10 @@
 		F4B7B4C92C35235800A348D3 /* Twib Music */ = {
 			isa = PBXGroup;
 			children = (
-				F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */,
 				F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */,
 				F4EB28E32C37A5A5003406EC /* HomeView.swift */,
+				F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */,
+				F476A66C2C5AF4D0008F5E53 /* SpotifyService.swift */,
 				F4B7B4CE2C35235900A348D3 /* Assets.xcassets */,
 				F4B7B4D02C35235900A348D3 /* Preview Content */,
 			);
@@ -162,6 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F476A66D2C5AF4D0008F5E53 /* SpotifyService.swift in Sources */,
 				F4E2786E2C39119100C924EC /* Twib-Music-Bridging-Header.m in Sources */,
 				F41FD3952C4DF0200078ABD0 /* MySpotifyManager.swift in Sources */,
 				F4B7B4CB2C35235800A348D3 /* Twib_MusicApp.swift in Sources */,
