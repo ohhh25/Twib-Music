@@ -40,35 +40,28 @@ class MySpotifyInterfacer: ObservableObject {
         }
     }
     
-    func satisfyRequest(_ request: URLRequest, completion: @escaping (String) -> Void) {
+    func satisfyRequest(_ request: URLRequest, completion: @escaping (Data?) -> Void) {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Return if error exists
             if let error = error {
                 print("Some Error: \(error.localizedDescription)")
-                completion("")
+                completion(nil); return
             }
             // Return if response is not HTTP
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("No HTTP response")
-                completion(""); return
+                completion(nil); return
             }
             // Check Status Code
             if !self.handleReponse(httpResponse) {
-                completion("")
+                completion(nil); return
             }
             // Check If Data was Received
             guard let data = data else {
                 print("No data received")
-                completion(""); return
+                completion(nil); return
             }
-            // Convert to UTF-8 string
-            if let responseString = String(data: data, encoding: .utf8) {
-                //print("Response data: \(responseString)")
-                completion(responseString)
-            } else {
-                print("Failed to decode the data: The data could not be converted to a UTF-8 string.")
-                completion("")
-            }
+            completion(data)
         }
         task.resume()
     }
@@ -79,9 +72,14 @@ class MySpotifyInterfacer: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        // Big Stuff
         self.satisfyRequest(request) { data in
-            if data != "" {
-                print(data)
+            guard let data = data else { return }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) {
+                print(json, type(of: json))
+            }
+            else {
+                print("Failed to parse the JSON data")
             }
         }
     }
