@@ -19,36 +19,40 @@ struct HomeView: View {
             HStack {
                 Image("cropped")
                     .resizable()
-                    .frame(width: 64, height: 64)
+                    .frame(width: 48, height: 48)
                 Text("Welcome to Twib Music!")
                     .font(.custom("Helvetica", size: 24))
                     .fontWeight(.bold)
             }
             // MARK: Spotify Connection
             if !spotifyManager.sessionConnected {
-                Text("Connect your Spotify account")
-                    .font(.custom("Helvetica", size: 18))
-                Button("Play TSwift!") {
+                Spacer()
+                Button("Connect Spotify Account") {
                     spotifyManager.didTapConnect()
                 }
                     .font(.custom("Helvetica", size: 18))
                     .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 11.75, leading: 32.0, bottom: 11.75, trailing: 32.0))
+                    .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
                     .background(buttonBackgroundColor)
-                    .cornerRadius(20.0)
-                    .padding(.top, 12)
+                    .cornerRadius(32)
+                    .padding(.top, 48)
+                Spacer()
             }
             else {
+                // MARK: Playlist View
                 Text("Spotify Account Connected!")
-                    .font(.custom("Helvetica", size: 18))
+                    .font(.custom("Helvetica", size: 16))
+                    .padding(.bottom, 6)
+                Divider()
                 List(interfacer.playlists) { playlist in
                     PlaylistView(playlist: playlist)
                 }
-                .padding(.top, 12)
+                .listStyle(.plain)
+                .padding(.top, 6)
+                Spacer(minLength: 48)
             }
         }
         .padding()
-        Spacer()
     }
 }
 

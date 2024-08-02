@@ -8,10 +8,11 @@
 import Foundation
 
 class MySpotifyInterfacer: ObservableObject {
+    @Published var playlists: [Playlist] = []
+    
     private var accessToken: String = ""
     private var refreshToken: String = ""
     private var expirationDate: Date = Date()
-    private var playlists: [Playlist] = []
     
     func saveSession(_ session: SPTSession) {
         self.accessToken = session.accessToken
@@ -97,8 +98,11 @@ class MySpotifyInterfacer: ObservableObject {
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 if let items = json["items"] as? [[String: Any]] {
                     // pass an array of dictionaries get an array of Playlist struct
-                    self.playlists = self.parsePlaylists(items)
-                    print("\(self.playlists.count) Playlists fetched")
+                    DispatchQueue.main.async {
+                        self.playlists = self.parsePlaylists(items)
+                        print("\(self.playlists.count) Playlists fetched")
+                        print(self.playlists[0].image_url)
+                    }
                 }
                 else {
                     print("Failed to get items from JSON data")
@@ -111,7 +115,8 @@ class MySpotifyInterfacer: ObservableObject {
     }
 }
 
-struct Playlist {
+struct Playlist: Identifiable {
+    let id = UUID()
     let name: String
     let description: String
     let tracks_url: String
