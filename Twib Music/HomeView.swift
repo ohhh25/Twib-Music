@@ -11,35 +11,40 @@ fileprivate let buttonBackgroundColor = Color(red:(29.0 / 255.0), green:(185.0 /
 
 struct HomeView: View {
     @StateObject private var spotifyManager = SpotifyManager
+    @StateObject private var interfacer = Interfacer
     
     var body: some View {
         VStack(alignment: .center) {
             // MARK: Standard Views
             HStack {
-                Image("Icon")
+                Image("cropped")
                     .resizable()
-                    .scaledToFit()
-                    .frame(width: 64)
-                    .padding()
+                    .frame(width: 64, height: 64)
                 Text("Welcome to Twib Music!")
                     .font(.custom("Helvetica", size: 24))
                     .fontWeight(.bold)
-                    .padding()
             }
             // MARK: Spotify Connection
             if !spotifyManager.sessionConnected {
                 Text("Connect your Spotify account")
+                    .font(.custom("Helvetica", size: 18))
                 Button("Play TSwift!") {
                     spotifyManager.didTapConnect()
                 }
-                .foregroundColor(.white)
-                .padding(EdgeInsets(top: 11.75, leading: 32.0, bottom: 11.75, trailing: 32.0))
-                .background(buttonBackgroundColor)
-                .cornerRadius(20.0)
-                .padding(.top, 12)
+                    .font(.custom("Helvetica", size: 18))
+                    .foregroundColor(.white)
+                    .padding(EdgeInsets(top: 11.75, leading: 32.0, bottom: 11.75, trailing: 32.0))
+                    .background(buttonBackgroundColor)
+                    .cornerRadius(20.0)
+                    .padding(.top, 12)
             }
             else {
                 Text("Spotify Account Connected!")
+                    .font(.custom("Helvetica", size: 18))
+                List(interfacer.playlists) { playlist in
+                    PlaylistView(playlist: playlist)
+                }
+                .padding(.top, 12)
             }
         }
         .padding()
