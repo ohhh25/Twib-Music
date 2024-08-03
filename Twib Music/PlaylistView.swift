@@ -28,6 +28,6 @@ struct PlaylistView: View {
 }
 
 #Preview {
-    let a = Playlist(name: "Test", description: "Test", tracks_url: "", image_url: "https://daylist.spotifycdn.com/playlist-covers-mix/en/afternoon_default.jpg", visible: 0)
+    let a = Playlist(name: "Liked Songs", description: "", tracks_url: "https://api.spotify.com/v1/me/tracks", image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/befa16c9a8b5798ef26763197cdb5fe072b70bbc/Twib%20Music/Assets.xcassets/saved.imageset/saved.png", visible: -1)
     PlaylistView(playlist: a)
 }

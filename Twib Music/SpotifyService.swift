@@ -18,6 +18,7 @@ class MySpotifyInterfacer: ObservableObject {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         self.expirationDate = session.expirationDate
+        self.playlists.append(saved)
         self.fetchPlaylists()
     }
     
@@ -99,8 +100,8 @@ class MySpotifyInterfacer: ObservableObject {
                 if let items = json["items"] as? [[String: Any]] {
                     // pass an array of dictionaries get an array of Playlist struct
                     DispatchQueue.main.async {
-                        self.playlists = self.parsePlaylists(items)
-                        print("\(self.playlists.count) Playlists fetched")
+                        self.playlists.append(contentsOf: self.parsePlaylists(items))
+                        print("\(self.playlists.count - 1) Playlists fetched")
                         print(self.playlists[0].image_url)
                     }
                 }
@@ -125,3 +126,4 @@ struct Playlist: Identifiable {
 }
 
 var Interfacer = MySpotifyInterfacer()
+var saved = Playlist(name: "Liked Songs", description: "", tracks_url: "https://api.spotify.com/v1/me/tracks", image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/befa16c9a8b5798ef26763197cdb5fe072b70bbc/Twib%20Music/Assets.xcassets/saved.imageset/saved.png", visible: -1)

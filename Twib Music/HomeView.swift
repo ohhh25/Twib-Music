@@ -24,9 +24,13 @@ struct HomeView: View {
                     .font(.custom("Helvetica", size: 24))
                     .fontWeight(.bold)
             }
+            .padding(.top, 6)
             // MARK: Spotify Connection
             if !spotifyManager.sessionConnected {
-                Spacer()
+                Image("Icon")
+                    .resizable()
+                    .padding(.top, 12)
+                    .scaledToFit()
                 Button("Connect Spotify Account") {
                     spotifyManager.didTapConnect()
                 }
@@ -35,7 +39,7 @@ struct HomeView: View {
                     .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
                     .background(buttonBackgroundColor)
                     .cornerRadius(32)
-                    .padding(.top, 48)
+                    .padding(.top, 24)
                 Spacer()
             }
             else {
@@ -48,11 +52,9 @@ struct HomeView: View {
                     PlaylistView(playlist: playlist)
                 }
                 .listStyle(.plain)
-                .padding(.top, 6)
-                Spacer(minLength: 48)
+                Spacer()
             }
         }
-        .padding()
     }
 }
 
