@@ -48,8 +48,14 @@ struct HomeView: View {
                     .font(.custom("Helvetica", size: 16))
                     .padding(.bottom, 6)
                 Divider()
-                List(interfacer.playlists) { playlist in
-                    PlaylistView(playlist: playlist)
+                NavigationStack {
+                    List(interfacer.playlists) { playlist in
+                        NavigationLink {
+                            TrackView(playlist: playlist)
+                        } label: {
+                            PlaylistView(playlist: playlist)
+                        }
+                    }
                 }
                 .listStyle(.plain)
                 Spacer()
