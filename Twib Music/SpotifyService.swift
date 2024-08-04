@@ -18,7 +18,9 @@ class MySpotifyInterfacer: ObservableObject {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         self.expirationDate = session.expirationDate
-        self.playlists.append(saved)
+        DispatchQueue.main.async {
+            self.playlists.append(saved)
+        }
         self.fetchPlaylists()
     }
     
@@ -89,7 +91,7 @@ class MySpotifyInterfacer: ObservableObject {
     
     func fetchPlaylists() {
         // Setup Request
-        guard let url = URL(string: "https://api.spotify.com/v1/me/playlists?limit=50&offset=0") else { return }
+        guard let url = URL(string: "https://api.spotify.com/v1/me/playlists?limit=20&offset=0") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -114,15 +116,40 @@ class MySpotifyInterfacer: ObservableObject {
             }
         }
     }
+    
+    func fetchTracks(base_url: String) -> [Song] {
+        // Setup Request
+        guard let url = URL(string: base_url) else { return []}
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        // Big Stuff
+        self.satisfyRequest(request) { data in
+            guard let data = data else { return }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                print(json)
+            }
+            else {
+                print("Failed to parse the JSON data")
+            }
+        }
+        return []
+    }
+}
+
+struct Song: Identifiable {
+    let id = UUID()
+    let name: String
 }
 
 struct Playlist: Identifiable {
-    let id = UUID()
+    var id = UUID()
     let name: String
     let description: String
     let tracks_url: String
     let image_url: String
     let visible: Int
+    var tracks: [Song] = []
 }
 
 var Interfacer = MySpotifyInterfacer()
