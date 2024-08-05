@@ -83,8 +83,7 @@ class MySpotifyAPI: ObservableObject {
                 return nil
             }
             let visible = (playlist["public"] as? Int) ?? -1
-            let songs = self.fetchTracks(base_url: tracks_url)
-            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible, tracks: songs)
+            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible)
         }
         return parsedPlaylists
     }
@@ -117,41 +116,25 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
-    func fetchTracks(base_url: String) -> [Song] {
-        var tracks: [Song] = []
-        // Setup Request
-        guard let url = URL(string: base_url) else { return tracks}
+    func fetchTracks(_ playlist: Playlist) {
+        guard let url = URL(string: playlist.tracks_url) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        // Big Stuff
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 print(json)
-                tracks.append(Song(name: "Taylor Swift"))
-                tracks.append(Song(name: "Taylor Swift"))
-                //print(tracks.count)
+                playlist.addTracks([Song(name: "Taylor Swift"), Song(name: "Taylor Swift")])
             }
             else {
                 print("Failed to parse the JSON data")
             }
         }
-        return tracks
     }
 }
 
 struct Song: Identifiable {
     let id = UUID()
     let name: String
-}
-
-struct Playlist: Identifiable {
-    var id = UUID()
-    let name: String
-    let description: String
-    let tracks_url: String
-    let image_url: String
-    let visible: Int
-    let tracks: [Song]
 }
