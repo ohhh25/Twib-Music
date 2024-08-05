@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct TrackView: View {
-    @State var playlist: Playlist
+    @StateObject var playlist: Playlist
     
     var body: some View {
         List(playlist.tracks) { track in
             Text(track.name)
+        }
+        .onAppear() {
+            SpotifyAPI.fetchTracks(playlist)
         }
     }
 }
