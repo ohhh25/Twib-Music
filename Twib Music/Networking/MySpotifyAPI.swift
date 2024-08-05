@@ -10,11 +10,18 @@ import Foundation
 var SpotifyAPI = MySpotifyAPI()
 
 class MySpotifyAPI: ObservableObject {
-    @Published var playlists: [Playlist] = []
+    @Published var playlists: [Playlist]
     
     private var accessToken: String = ""
     private var refreshToken: String = ""
     private var expirationDate: Date = Date()
+    
+    init() {
+        self.playlists = [Playlist(name: "Liked Songs", description: "",
+                                   tracks_url: "https://api.spotify.com/v1/me/tracks",
+                                   image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/saved.imageset/saved.png",
+                                   visible: -1)]
+    }
     
     func saveSession(_ session: SPTSession) {
         self.accessToken = session.accessToken
@@ -117,10 +124,12 @@ class MySpotifyAPI: ObservableObject {
     }
     
     func fetchTracks(_ playlist: Playlist) {
+        // Setup Request
         guard let url = URL(string: playlist.tracks_url) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        // Big Stuff
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {

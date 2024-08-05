@@ -101,11 +101,11 @@
 		F4B7B4C92C35235800A348D3 /* Twib Music */ = {
 			isa = PBXGroup;
 			children = (
+				F4B7B4CE2C35235900A348D3 /* Assets.xcassets */,
 				F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */,
 				F48DBF482C61586800FF8D9F /* Views */,
 				F48DBF452C61520E00FF8D9F /* Networking */,
 				F48DBF472C61524700FF8D9F /* Models */,
-				F4B7B4CE2C35235900A348D3 /* Assets.xcassets */,
 				F4B7B4D02C35235900A348D3 /* Preview Content */,
 			);
 			path = "Twib Music";
