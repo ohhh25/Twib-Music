@@ -36,7 +36,7 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
 
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("session initated")
-        Interfacer.saveSession(session)
+        SpotifyAPI.saveSession(session)
         DispatchQueue.main.async {
             self.sessionConnected = true
         }
