@@ -1,5 +1,5 @@
 //
-//  SpotifyService.swift
+//  MySpotifyAPI.swift
 //  Twib Music
 //
 //  Created by Lukas Cao on 7/31/24.
@@ -7,7 +7,9 @@
 
 import Foundation
 
-class MySpotifyInterfacer: ObservableObject {
+var SpotifyAPI = MySpotifyAPI()
+
+class MySpotifyAPI: ObservableObject {
     @Published var playlists: [Playlist] = []
     
     private var accessToken: String = ""
@@ -18,9 +20,6 @@ class MySpotifyInterfacer: ObservableObject {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         self.expirationDate = session.expirationDate
-        DispatchQueue.main.async {
-            self.playlists.append(saved)
-        }
         self.fetchPlaylists()
     }
     
@@ -84,7 +83,8 @@ class MySpotifyInterfacer: ObservableObject {
                 return nil
             }
             let visible = (playlist["public"] as? Int) ?? -1
-            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible)
+            let songs = self.fetchTracks(base_url: tracks_url)
+            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible, tracks: songs)
         }
         return parsedPlaylists
     }
@@ -118,8 +118,9 @@ class MySpotifyInterfacer: ObservableObject {
     }
     
     func fetchTracks(base_url: String) -> [Song] {
+        var tracks: [Song] = []
         // Setup Request
-        guard let url = URL(string: base_url) else { return []}
+        guard let url = URL(string: base_url) else { return tracks}
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -128,12 +129,15 @@ class MySpotifyInterfacer: ObservableObject {
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 print(json)
+                tracks.append(Song(name: "Taylor Swift"))
+                tracks.append(Song(name: "Taylor Swift"))
+                //print(tracks.count)
             }
             else {
                 print("Failed to parse the JSON data")
             }
         }
-        return []
+        return tracks
     }
 }
 
@@ -149,8 +153,5 @@ struct Playlist: Identifiable {
     let tracks_url: String
     let image_url: String
     let visible: Int
-    var tracks: [Song] = []
+    let tracks: [Song]
 }
-
-var Interfacer = MySpotifyInterfacer()
-var saved = Playlist(name: "Liked Songs", description: "", tracks_url: "https://api.spotify.com/v1/me/tracks", image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/befa16c9a8b5798ef26763197cdb5fe072b70bbc/Twib%20Music/Assets.xcassets/saved.imageset/saved.png", visible: -1)

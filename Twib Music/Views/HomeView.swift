@@ -11,7 +11,7 @@ fileprivate let buttonBackgroundColor = Color(red:(29.0 / 255.0), green:(185.0 /
 
 struct HomeView: View {
     @StateObject private var spotifyManager = SpotifyManager
-    @StateObject private var interfacer = Interfacer
+    @StateObject private var spotifyAPI = SpotifyAPI
     
     var body: some View {
         VStack(alignment: .center) {
@@ -49,7 +49,7 @@ struct HomeView: View {
                     .padding(.bottom, 6)
                 Divider()
                 NavigationStack {
-                    List(interfacer.playlists) { playlist in
+                    List(spotifyAPI.playlists) { playlist in
                         NavigationLink {
                             TrackView(playlist: playlist)
                         } label: {
