@@ -27,7 +27,7 @@ class MySpotifyAPI: ObservableObject {
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
         self.expirationDate = session.expirationDate
-        self.fetchPlaylists()
+        self.fetchPlaylists(url: "https://api.spotify.com/v1/me/playlists?limit=50")
     }
     
     func handleReponse(_ response: HTTPURLResponse) -> Bool {
@@ -94,9 +94,9 @@ class MySpotifyAPI: ObservableObject {
         return parsedPlaylists
     }
     
-    func fetchPlaylists() {
+    func fetchPlaylists(url: String) {
         // Setup Request
-        guard let url = URL(string: "https://api.spotify.com/v1/me/playlists?limit=20&offset=0") else { return }
+        guard let url = URL(string: url) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -108,12 +108,14 @@ class MySpotifyAPI: ObservableObject {
                     // pass an array of dictionaries get an array of Playlist struct
                     DispatchQueue.main.async {
                         self.playlists.append(contentsOf: self.parsePlaylists(items))
-                        print("\(self.playlists.count - 1) Playlists fetched")
-                        print(self.playlists[0].image_url)
+                        print("\(self.playlists.count) Playlists fetched")
                     }
                 }
                 else {
                     print("Failed to get items from JSON data")
+                }
+                if let next = json["next"] as? String {
+                    self.fetchPlaylists(url: next)
                 }
             }
             else {
