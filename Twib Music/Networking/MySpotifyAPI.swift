@@ -34,7 +34,6 @@ class MySpotifyAPI: ObservableObject {
         let code = response.statusCode
         switch code {
         case 200:
-            print("Status \(code)")
             return true
         case 401:
             print("Status \(code): Bad or expired token. This can happen if the user revoked a token or the access token has expired. You should re-authenticate the user.")
@@ -149,9 +148,9 @@ class MySpotifyAPI: ObservableObject {
         return songs
     }
     
-    func fetchTracks(_ playlist: Playlist) {
+    func fetchTracks(_ playlist: Playlist, url: String) {
         // Setup Request
-        guard let url = URL(string: playlist.tracks_url + "?limit=50") else { return }
+        guard let url = URL(string: url) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -160,10 +159,14 @@ class MySpotifyAPI: ObservableObject {
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 if let items = json["items"] as? [[String: Any]] {
-                    playlist.addTracks(self.parseTracks(items))
+                    let tracks = self.parseTracks(items)
+                    playlist.addTracks(tracks)
                 }
                 else {
                     print("Failed to get items from JSON data")
+                }
+                if let next = json["next"] as? String {
+                    self.fetchTracks(playlist, url: next)
                 }
             }
             else {
