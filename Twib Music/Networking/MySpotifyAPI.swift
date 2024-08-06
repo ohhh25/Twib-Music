@@ -123,9 +123,35 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
+    func parseTracks(_ array: [[String: Any]]) -> [Song] {
+        let songs: [Song] = array.compactMap { item -> Song? in
+            guard let song = item["track"] as? [String: Any] else { return nil }
+            let local = song["is_local"] as? Int
+            if local == 1 {
+                return nil
+            }
+            guard
+                let name = song["name"] as? String,
+                let artists = song["artists"] as? [[String: Any]],
+                let album = song["album"] as? [String: Any],
+                let track_number = song["track_number"] as? Int,
+                let duration = song["duration_ms"] as? Int,
+                let sID = song["id"] as? String,
+                let external_ids = song["external_ids"] as? [String: Any],
+                let popularity = song["popularity"] as? Int
+            else {
+                return nil
+            }
+            let preview_url = (song["preview_url"] as? String) ?? ""
+            let explicit = (song["explicit"] as? Int) ?? -1
+            return Song(name: name, artists: artists, album: album, track_number: track_number, duration: duration, sID: sID, external_ids: external_ids, preview_url: preview_url, explicit: explicit, popularity: popularity)
+        }
+        return songs
+    }
+    
     func fetchTracks(_ playlist: Playlist) {
         // Setup Request
-        guard let url = URL(string: playlist.tracks_url) else { return }
+        guard let url = URL(string: playlist.tracks_url + "?limit=50") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -133,17 +159,16 @@ class MySpotifyAPI: ObservableObject {
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print(json)
-                playlist.addTracks([Song(name: "Taylor Swift"), Song(name: "Taylor Swift")])
+                if let items = json["items"] as? [[String: Any]] {
+                    playlist.addTracks(self.parseTracks(items))
+                }
+                else {
+                    print("Failed to get items from JSON data")
+                }
             }
             else {
                 print("Failed to parse the JSON data")
             }
         }
     }
-}
-
-struct Song: Identifiable {
-    let id = UUID()
-    let name: String
 }
