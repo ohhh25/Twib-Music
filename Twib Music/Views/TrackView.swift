@@ -15,7 +15,9 @@ struct TrackView: View {
             Text(track.name)
         }
         .onAppear() {
-            SpotifyAPI.fetchTracks(playlist)
+            if playlist.tracks.isEmpty {
+                SpotifyAPI.fetchTracks(playlist)
+            }
         }
     }
 }
