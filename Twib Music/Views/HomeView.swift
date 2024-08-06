@@ -25,41 +25,41 @@ struct HomeView: View {
                     .fontWeight(.bold)
             }
             .padding(.top, 6)
-            // MARK: Spotify Connection
-            if !spotifyManager.sessionConnected {
-                Image("Icon")
-                    .resizable()
-                    .padding(.top, 12)
-                    .scaledToFit()
-                Button("Connect Spotify Account") {
-                    spotifyManager.didTapConnect()
-                }
-                    .font(.custom("Helvetica", size: 18))
-                    .foregroundColor(.white)
-                    .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
-                    .background(buttonBackgroundColor)
-                    .cornerRadius(32)
-                    .padding(.top, 24)
-                Spacer()
+        }
+        // MARK: Spotify Connection
+        if !spotifyManager.sessionConnected {
+            Image("Icon")
+                .resizable()
+                .padding(.top, 12)
+                .scaledToFit()
+            Button("Connect Spotify Account") {
+                spotifyManager.didTapConnect()
             }
-            else {
-                // MARK: Playlist View
-                Text("Spotify Account Connected!")
-                    .font(.custom("Helvetica", size: 16))
-                    .padding(.bottom, 6)
-                Divider()
-                NavigationStack {
-                    List(spotifyAPI.playlists) { playlist in
-                        NavigationLink {
-                            TrackView(playlist: playlist)
-                        } label: {
-                            PlaylistView(playlist: playlist)
-                        }
+                .font(.custom("Helvetica", size: 18))
+                .foregroundColor(.white)
+                .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
+                .background(buttonBackgroundColor)
+                .cornerRadius(32)
+                .padding(.top, 24)
+            Spacer()
+        }
+        else {
+            // MARK: Playlist View
+            Text("Spotify Account Connected!")
+                .font(.custom("Helvetica", size: 16))
+                .padding(.bottom, 6)
+            Divider()
+            NavigationStack {
+                List(spotifyAPI.playlists) { playlist in
+                    NavigationLink {
+                        TrackView(playlist: playlist)
+                    } label: {
+                        PlaylistView(playlist: playlist)
                     }
                 }
-                .listStyle(.plain)
-                Spacer()
             }
+            .listStyle(.plain)
+            Spacer()
         }
     }
 }
