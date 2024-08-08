@@ -14,20 +14,9 @@ struct HomeView: View {
     @StateObject private var spotifyAPI = SpotifyAPI
     
     var body: some View {
-        VStack(alignment: .center) {
-            // MARK: Standard Views
-            HStack {
-                Image("cropped")
-                    .resizable()
-                    .frame(width: 48, height: 48)
-                Text("Welcome to Twib Music!")
-                    .font(.custom("Helvetica", size: 24))
-                    .fontWeight(.bold)
-            }
-            .padding(.top, 6)
-        }
         // MARK: Spotify Connection
         if !spotifyManager.sessionConnected {
+            HeadingView()
             Image("Icon")
                 .resizable()
                 .padding(.top, 12)
@@ -45,11 +34,12 @@ struct HomeView: View {
         }
         else {
             // MARK: Playlist View
-            Text("Spotify Account Connected!")
-                .font(.custom("Helvetica", size: 16))
-                .padding(.bottom, 6)
-            Divider()
             NavigationStack {
+                HeadingView()
+                Text("Spotify Account Connected!")
+                    .font(.custom("Helvetica", size: 16))
+                    .padding(.bottom, 6)
+                Divider()
                 List(spotifyAPI.playlists) { playlist in
                     NavigationLink {
                         TrackView(playlist: playlist)
