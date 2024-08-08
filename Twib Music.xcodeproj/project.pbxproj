@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F41FD3952C4DF0200078ABD0 /* MySpotifyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */; };
+		F441B22E2C6563BB006F2118 /* HeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441B22D2C6563BB006F2118 /* HeadingView.swift */; };
 		F471AF302C5C4B9F00CC1E62 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F471AF2F2C5C4B9F00CC1E62 /* PlaylistView.swift */; };
 		F476A6692C5ADC6C008F5E53 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F476A6682C5ADC6C008F5E53 /* SpotifyiOS */; };
 		F476A66D2C5AF4D0008F5E53 /* MySpotifyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F476A66C2C5AF4D0008F5E53 /* MySpotifyAPI.swift */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		F41FD38C2C4C83FD0078ABD0 /* Twib-Music-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Twib-Music-Info.plist"; sourceTree = "<group>"; };
 		F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySpotifyManager.swift; sourceTree = "<group>"; };
+		F441B22D2C6563BB006F2118 /* HeadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingView.swift; sourceTree = "<group>"; };
 		F471AF2F2C5C4B9F00CC1E62 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		F476A66C2C5AF4D0008F5E53 /* MySpotifyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySpotifyAPI.swift; sourceTree = "<group>"; };
 		F48DBF492C61591B00FF8D9F /* TrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 		F48DBF482C61586800FF8D9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F441B22D2C6563BB006F2118 /* HeadingView.swift */,
 				F4EB28E32C37A5A5003406EC /* HomeView.swift */,
 				F471AF2F2C5C4B9F00CC1E62 /* PlaylistView.swift */,
 				F48DBF492C61591B00FF8D9F /* TrackView.swift */,
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F48DBF502C627BE600FF8D9F /* Song.swift in Sources */,
+				F441B22E2C6563BB006F2118 /* HeadingView.swift in Sources */,
 				F471AF302C5C4B9F00CC1E62 /* PlaylistView.swift in Sources */,
 				F476A66D2C5AF4D0008F5E53 /* MySpotifyAPI.swift in Sources */,
 				F48DBF4A2C61591B00FF8D9F /* TrackView.swift in Sources */,
