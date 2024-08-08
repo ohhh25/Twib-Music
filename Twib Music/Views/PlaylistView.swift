@@ -20,8 +20,10 @@ struct PlaylistView: View {
             }
                 .frame(width: 64, height: 64)
             Text(playlist.name)
-                .font(.custom("Helvetica", size: 16))
+                .font(.custom("Helvetica Neue", size: 16))
+                .fontWeight(.medium)
                 .padding(.leading, 12)
+                .lineLimit(2)
             Spacer()
         }
     }

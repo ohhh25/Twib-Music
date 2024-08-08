@@ -31,9 +31,11 @@ struct TrackView: View {
                     Text(track.name)
                         .font(.custom("Helvetica", size: 16))
                         .padding(.bottom, 2)
+                        .lineLimit(1)
                     Text(track.artist)
                         .font(.custom("Helvetica", size: 12))
                         .fontWeight(.light)
+                        .lineLimit(1)
                 }
                 .padding(.leading, 12)
                 Spacer()
