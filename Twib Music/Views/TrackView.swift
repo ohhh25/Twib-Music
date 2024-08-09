@@ -11,13 +11,32 @@ struct TrackView: View {
     @StateObject var playlist: Playlist
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
+            
+            VStack(alignment: .leading) {
+                Text(playlist.name)
+                    .font(.custom("Helvetica", size: 16))
+                    .fontWeight(.medium)
+                    .padding(.top, 2)
+                Spacer()
+                Text("\(playlist.tracks.count) songs")
+                    .font(.custom("Helvetica", size: 12))
+                    .italic()
+                    .padding(.trailing, 24)
+            }
+                .padding(.leading, 24)
             Spacer()
-            Text("\(playlist.tracks.count) songs")
-                .font(.custom("Helvetica", size: 16))
-                .italic()
+            AsyncImage(url: URL(string: playlist.image_url)) { image in
+                image
+                    .resizable()
+            } placeholder: {
+                ProgressView()
+            }
+                .frame(width: 128, height: 128)
                 .padding(.trailing, 24)
         }
+        .frame(height: 144)
+        .padding(.bottom, 6)
         List(playlist.tracks) {track in
             HStack {
                 AsyncImage(url: URL(string: track.image_url)) { image in
