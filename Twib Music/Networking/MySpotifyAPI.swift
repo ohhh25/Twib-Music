@@ -11,6 +11,7 @@ var SpotifyAPI = MySpotifyAPI()
 
 class MySpotifyAPI: ObservableObject {
     @Published var playlists: [Playlist]
+    @Published var albums: [Album] = []
     
     private var accessToken: String = ""
     private var refreshToken: String = ""
@@ -28,6 +29,7 @@ class MySpotifyAPI: ObservableObject {
         self.refreshToken = session.refreshToken
         self.expirationDate = session.expirationDate
         self.fetchPlaylists(url: "https://api.spotify.com/v1/me/playlists?limit=50")
+        self.fetchAlbums(url: "https://api.spotify.com/v1/me/albums?limit=50")
     }
     
     func handleReponse(_ response: HTTPURLResponse) -> Bool {
@@ -116,6 +118,48 @@ class MySpotifyAPI: ObservableObject {
                 }
                 if let next = json["next"] as? String {
                     self.fetchPlaylists(url: next)
+                }
+            }
+            else {
+                print("Failed to parse the JSON data")
+            }
+        }
+    }
+    
+    func parseAlbums(_ array: [[String: Any]]) -> [Album] {
+        let parsedAlbums: [Album] = array.compactMap { item -> Album? in
+            guard
+                let album = item["album"] as? [String: Any],
+                let name = album["name"] as? String
+            else {
+                return nil
+            }
+            return Album(name: name, description: "", tracks_url: "", image_url: "", visible: -1)
+        }
+        return parsedAlbums
+    }
+    
+    func fetchAlbums(url: String) {
+        // Setup Request
+        guard let url = URL(string: url) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        // Big Stuff
+        self.satisfyRequest(request) { data in
+            guard let data = data else { return }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                if let items = json["items"] as? [[String: Any]] {
+                    DispatchQueue.main.async {
+                        self.albums.append(contentsOf: self.parseAlbums(items))
+                        print("\(self.albums.count) Albums fetched")
+                    }
+                }
+                else {
+                    print("Failed to get items from JSON data")
+                }
+                if let next = json["next"] as? String {
+                    self.fetchAlbums(url: next)
                 }
             }
             else {
