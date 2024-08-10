@@ -9,16 +9,15 @@ import SwiftUI
 
 struct TrackView: View {
     @StateObject var playlist: Playlist
+    @State var isPlaying = false
     
     var body: some View {
-        HStack(alignment: .top) {
-            
+        HStack(alignment: .bottom) {
             VStack(alignment: .leading) {
-                Text(playlist.name)
-                    .font(.custom("Helvetica", size: 16))
-                    .fontWeight(.medium)
-                    .padding(.top, 2)
-                Spacer()
+                Button("", systemImage: isPlaying ? "pause.circle" : "play.circle") {
+                    isPlaying.toggle()
+                }
+                .font(.custom("Helvetica", size: 48))
                 Text("\(playlist.tracks.count) songs")
                     .font(.custom("Helvetica", size: 12))
                     .italic()
@@ -35,8 +34,15 @@ struct TrackView: View {
                 .frame(width: 128, height: 128)
                 .padding(.trailing, 24)
         }
-        .frame(height: 144)
-        .padding(.bottom, 6)
+            .frame(height: 128)
+            .padding(.bottom, 6)
+        .toolbar {
+            Text(playlist.name)
+                .font(.custom("Helvetica", size: 16))
+                .fontWeight(.medium)
+                .frame(height: 48)
+                .lineLimit(2)
+        }
         List(playlist.tracks) {track in
             HStack {
                 AsyncImage(url: URL(string: track.image_url)) { image in
@@ -46,25 +52,44 @@ struct TrackView: View {
                     ProgressView()
                 }
                     .frame(width: 48, height: 48)
-                VStack(alignment: .leading) {
-                    Text(track.name)
-                        .font(.custom("Helvetica", size: 16))
-                        .padding(.bottom, 2)
-                        .lineLimit(1)
-                    Text(track.artist)
-                        .font(.custom("Helvetica", size: 12))
-                        .fontWeight(.light)
-                        .lineLimit(1)
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(track.name)
+                            .font(.custom("Helvetica", size: 16))
+                            .padding(.bottom, 2)
+                            .lineLimit(1)
+                        Text(track.artist)
+                            .font(.custom("Helvetica", size: 12))
+                            .fontWeight(.light)
+                            .lineLimit(1)
+                    }
+                    .padding(.leading, 12)
+                    Spacer()
+                    Menu{
+                        Button("djfk", action: someFunction)
+                    } label: {
+                        Label("", systemImage: "ellipsis")
+                    }
                 }
-                .padding(.leading, 12)
                 Spacer()
             }
         }
         .onAppear() {
+            print(playlist.description)
             let url = playlist.tracks_url + "?limit=50"
             if playlist.tracks.isEmpty {
-                SpotifyAPI.fetchTracks(playlist, url: url)
+                if playlist is Twib_Music.Album {
+                    SpotifyAPI.fetchTracks(playlist, url: playlist.tracks_url)
+                }
+                else {
+                    SpotifyAPI.fetchTracks(playlist, url: url)
+                }
             }
         }
     }
 }
+
+func someFunction() {
+        print("Hello, World!")
+    }
+
