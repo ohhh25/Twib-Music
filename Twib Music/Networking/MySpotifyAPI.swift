@@ -183,9 +183,9 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
-    func parseTracks(_ array: [[String: Any]]) -> [Song] {
+    func parseTracks(_ array: [[String: Any]], isAlbum: Bool) -> [Song] {
         let songs: [Song] = array.compactMap { item -> Song? in
-            guard let song = item["track"] as? [String: Any] else { return nil }
+            guard let song = isAlbum ? item : item["track"] as? [String: Any] else { return nil }
             let local = song["is_local"] as? Int
             if local == 1 {
                 return nil
@@ -193,17 +193,18 @@ class MySpotifyAPI: ObservableObject {
             guard
                 let name = song["name"] as? String,
                 let artists = song["artists"] as? [[String: Any]],
-                let album = song["album"] as? [String: Any],
+                let album = (isAlbum) ? [:] : song["album"] as? [String: Any],
+                //let album = song["album"] as? [String: Any],
                 let track_number = song["track_number"] as? Int,
                 let duration = song["duration_ms"] as? Int,
-                let sID = song["id"] as? String,
-                let external_ids = song["external_ids"] as? [String: Any],
-                let popularity = song["popularity"] as? Int
+                let sID = song["id"] as? String
             else {
                 return nil
             }
+            let external_ids = song["external_ids"] as? [String: Any] ?? [:]
             let preview_url = (song["preview_url"] as? String) ?? ""
             let explicit = (song["explicit"] as? Int) ?? -1
+            let popularity = song["popularity"] as? Int ?? -1
             return Song(name: name, artists: artists, album: album, track_number: track_number, duration: duration, sID: sID, external_ids: external_ids, preview_url: preview_url, explicit: explicit, popularity: popularity)
         }
         return songs
@@ -220,7 +221,7 @@ class MySpotifyAPI: ObservableObject {
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 if let items = json["items"] as? [[String: Any]] {
-                    let tracks = self.parseTracks(items)
+                    let tracks = self.parseTracks(items, isAlbum: playlist is Twib_Music.Album)
                     playlist.addTracks(tracks)
                 }
                 else {
