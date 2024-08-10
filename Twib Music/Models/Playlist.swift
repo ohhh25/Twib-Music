@@ -23,6 +23,14 @@ class Playlist: Identifiable, ObservableObject {
         self.visible = visible
     }
     
+    init(name: String, tracks_url: String, image_url: String) {
+        self.name = name
+        self.tracks_url = tracks_url
+        self.image_url = image_url
+        self.description = ""
+        self.visible = -1
+    }
+    
     func addTracks(_ tracks: [Song]) {
         DispatchQueue.main.async {
             self.tracks.append(contentsOf: tracks)
