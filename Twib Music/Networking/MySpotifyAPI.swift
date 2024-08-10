@@ -130,11 +130,26 @@ class MySpotifyAPI: ObservableObject {
         let parsedAlbums: [Album] = array.compactMap { item -> Album? in
             guard
                 let album = item["album"] as? [String: Any],
-                let name = album["name"] as? String
+                // inherited values
+                let name = album["name"] as? String,
+                let tracks = album["tracks"] as? [String: Any],
+                let tracks_url = tracks["href"] as? String,
+                let images = album["images"] as? [[String: Any]],
+                let image_url = images.first?["url"] as? String,
+                // extended values
+                let artists = album["artists"] as? [[String: Any]],
+                let type = album["album_type"] as? String,
+                let total_tracks = album["total_tracks"] as? Int,
+                let release_date = album["release_date"] as? String,
+                let external_ids = album["external_ids"] as? [String: Any],
+                let popularity = album["popularity"] as? Int
             else {
                 return nil
             }
-            return Album(name: name, description: "", tracks_url: "", image_url: "", visible: -1)
+            return Album(name: name, tracks_url: tracks_url, image_url: image_url,
+                         artists: artists, type: type, total_tracks: total_tracks,
+                         release_date: release_date, external_ids: external_ids,
+                         popularity: popularity)
         }
         return parsedAlbums
     }
