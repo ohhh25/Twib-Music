@@ -36,7 +36,7 @@ class Song: Identifiable {
         }
         self.album = album["name"] as? String ?? ""
         let album_images = album["images"] as? [[String: Any]]
-        self.image_url = album_images?.suffix(1).first?["url"] as? String ?? ""
+        self.image_url = album_images?.first?["url"] as? String ?? ""
         self.track_number = track_number
         self.duration = duration
         
