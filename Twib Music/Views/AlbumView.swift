@@ -11,6 +11,6 @@ struct AlbumView: View {
     var album: Album
     
     var body: some View {
-        Text(album.name)
+        PlaylistView(playlist: album)
     }
 }
