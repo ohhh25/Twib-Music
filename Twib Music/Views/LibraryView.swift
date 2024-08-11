@@ -8,16 +8,20 @@
 import SwiftUI
 
 struct LibraryView: View {
-    let playlists: [Playlist]
+    @StateObject private var spotifyAPI = SpotifyAPI
+    @State private var selectedList: listType = .parent_list
     
     var body: some View {
         NavigationStack {
             HeadingView()
-            Text("Spotify Account Connected!")
-                .font(.custom("Helvetica", size: 16))
-                .padding(.bottom, 6)
-            Divider()
-            List(playlists) { playlist in
+            Picker("", selection: $selectedList) {
+                ForEach(listType.allCases) { selection in
+                    Text(selection.rawValue).tag(selection)
+                        .font(.custom("Helvetica", size: 24))
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            List(selectedList == .parent_list ? spotifyAPI.playlists : spotifyAPI.albums) { playlist in
                 NavigationLink {
                     TrackView(playlist: playlist)
                 } label: {
