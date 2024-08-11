@@ -39,39 +39,11 @@ struct HomeView: View {
             else {
                 // MARK: Playlist View
                 TabView {
-                    NavigationStack {
-                        HeadingView()
-                        Text("Spotify Account Connected!")
-                            .font(.custom("Helvetica", size: 16))
-                            .padding(.bottom, 6)
-                        Divider()
-                        List(spotifyAPI.playlists) { playlist in
-                            NavigationLink {
-                                TrackView(playlist: playlist)
-                            } label: {
-                                PlaylistView(playlist: playlist)
-                            }
-                        }
-                    }
-                    .listStyle(.plain)
+                    LibraryView(playlists: spotifyAPI.playlists)
                     .tabItem {
                         Text("Playlists")
                     }
-                    NavigationStack {
-                        HeadingView()
-                        Text("Spotify Account Connected!")
-                            .font(.custom("Helvetica", size: 16))
-                            .padding(.bottom, 6)
-                        Divider()
-                        List(spotifyAPI.albums) { album in
-                            NavigationLink {
-                                TrackView(playlist: album)
-                            } label: {
-                                AlbumView(album: album)
-                            }
-                        }
-                    }
-                    .listStyle(.plain)
+                    LibraryView(playlists: spotifyAPI.albums)
                     .tabItem {
                         Text("Albums")
                     }
