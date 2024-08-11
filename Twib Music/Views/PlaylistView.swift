@@ -12,18 +12,21 @@ struct PlaylistView: View {
     
     var body: some View {
         HStack {
-            AsyncImage(url: URL(string: playlist.image_url)) { image in
-                image
-                    .resizable()
-            } placeholder: {
-                ProgressView()
+            ImageView(image_url: playlist.image_url, size: 64)
+            VStack(alignment: .leading) {
+                Text(playlist.name)
+                    .font(.custom("Helvetica Neue", size: 16))
+                    .fontWeight(.medium)
+                    .lineLimit(2)
+                    .padding(.bottom, 4)
+                if let album = playlist as? Album {
+                    Text(album.artist)
+                        .font(.custom("Helvetica Neue", size: 12))
+                        .fontWeight(.light)
+                        .lineLimit(1)
+                }
             }
-                .frame(width: 64, height: 64)
-            Text(playlist.name)
-                .font(.custom("Helvetica Neue", size: 16))
-                .fontWeight(.medium)
-                .padding(.leading, 12)
-                .lineLimit(2)
+            .padding(.leading, 12)
             Spacer()
         }
     }

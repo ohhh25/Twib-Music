@@ -12,6 +12,7 @@ struct TrackView: View {
     @State var isPlaying = false
     
     var body: some View {
+        // MARK: JUST HEADING
         HStack(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Button("", systemImage: isPlaying ? "pause.circle" : "play.circle") {
@@ -43,47 +44,39 @@ struct TrackView: View {
                 .frame(height: 48)
                 .lineLimit(2)
         }
-        List(playlist.tracks) {track in
+        // MARK: REAL BODY
+        List(Array(playlist.tracks.enumerated()), id: \.offset) { idx, track in
             HStack {
-                AsyncImage(url: URL(string: track.image_url)) { image in
-                    image
-                        .resizable()
-                } placeholder: {
-                    ProgressView()
+                if playlist is Twib_Music.Album {
+                    Text("\(idx + 1)")
+                        .font(.custom("Helvetica", size: 16))
+                        .frame(width: 18, alignment: .trailing)
                 }
-                    .frame(width: 48, height: 48)
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(track.name)
-                            .font(.custom("Helvetica", size: 16))
-                            .padding(.bottom, 2)
-                            .lineLimit(1)
-                        Text(track.artist)
-                            .font(.custom("Helvetica", size: 12))
-                            .fontWeight(.light)
-                            .lineLimit(1)
-                    }
-                    .padding(.leading, 12)
-                    Spacer()
-                    Menu{
-                        Button("djfk", action: someFunction)
-                    } label: {
-                        Label("", systemImage: "ellipsis")
-                    }
+                else { ImageView(image_url: track.image_url, size: 48) }
+                VStack(alignment: .leading) {
+                    Text(track.name)
+                        .font(.custom("Helvetica", size: 16))
+                        .padding(.bottom, 2)
+                        .lineLimit(1)
+                    Text(track.artist)
+                        .font(.custom("Helvetica", size: 12))
+                        .fontWeight(.light)
+                        .lineLimit(1)
                 }
+                .padding(.leading, 12)
                 Spacer()
+                Menu{
+                    Button("djfk", action: someFunction)
+                } label: {
+                    Label("", systemImage: "ellipsis")
+                }
             }
         }
         .onAppear() {
             print(playlist.description)
-            let url = playlist.tracks_url + "?limit=50"
+            let url = playlist is Twib_Music.Album ? playlist.tracks_url : playlist.tracks_url + "?limit=50"
             if playlist.tracks.isEmpty {
-                if playlist is Twib_Music.Album {
-                    SpotifyAPI.fetchTracks(playlist, url: playlist.tracks_url)
-                }
-                else {
-                    SpotifyAPI.fetchTracks(playlist, url: url)
-                }
+                SpotifyAPI.fetchTracks(playlist, url: url)
             }
         }
     }
