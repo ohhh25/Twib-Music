@@ -42,3 +42,9 @@ struct ImageView: View {
         .frame(width: size, height: size)
     }
 }
+
+enum listType: String, CaseIterable, Identifiable {
+    case parent_list = "Playlists"
+    case child_list = "Albums"
+    var id: String { self.rawValue }
+}
