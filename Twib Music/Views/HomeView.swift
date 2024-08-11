@@ -14,11 +14,9 @@ fileprivate let grad = [botColor, topColor, botColor, topColor, topColor]
 
 struct HomeView: View {
     @StateObject private var spotifyManager = SpotifyManager
-    @StateObject private var spotifyAPI = SpotifyAPI
     
     var body: some View {
         Group {
-            // MARK: Spotify Connection
             if !spotifyManager.sessionConnected {
                 HeadingView()
                 Image("Icon")
@@ -37,17 +35,7 @@ struct HomeView: View {
                 Spacer()
             }
             else {
-                // MARK: Playlist View
-                TabView {
-                    LibraryView(playlists: spotifyAPI.playlists)
-                    .tabItem {
-                        Text("Playlists")
-                    }
-                    LibraryView(playlists: spotifyAPI.albums)
-                    .tabItem {
-                        Text("Albums")
-                    }
-                }
+                LibraryView()
             }
         }
         .background(AngularGradient(colors: grad, center: UnitPoint(x: 0.5, y: 0.4)))
