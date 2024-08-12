@@ -8,13 +8,14 @@
 import Combine
 import SpotifyiOS
 
+var SpotifyManager = MySpotifyManager()
+
 class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
     // MARK: Basic Variables
     @Published var sessionConnected: Bool = false
     
     private let SpotifyClientID = "94c1f2b813ae49f1add24416dab05b6c"
     private let SpotifyRedirectURI = URL(string: "Twib-Music://spotify-login-callback")!
-    private var connectionCallback: ((Bool) -> Void)?
     
     lazy var configuration: SPTConfiguration = {
         let configuration = SPTConfiguration(clientID: SpotifyClientID, redirectURL: SpotifyRedirectURI)
@@ -42,6 +43,11 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
         }
     }
     
+    func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
+        print("session renewed")
+        SpotifyAPI.saveSession(session)
+    }
+    
     // MARK: Actions
     @objc func didTapConnect() {
         let scope: SPTScope = [.userLibraryRead, .playlistReadPrivate]
@@ -52,5 +58,3 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
         sessionManager.application(UIApplication.shared, open: url, options: [:])
     }
 }
-
-var SpotifyManager = MySpotifyManager()
