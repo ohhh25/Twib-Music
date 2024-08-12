@@ -18,10 +18,6 @@ class MySpotifyAPI: ObservableObject {
     private var refreshToken: String = ""
     
     init() {
-        self.initializeData()
-    }
-    
-    private func initializeData() {
         self.playlists = [Playlist(name: "Liked Songs", description: "",
                                    tracks_url: "https://api.spotify.com/v1/me/tracks",
                                    image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/saved.imageset/saved.png",
@@ -33,9 +29,10 @@ class MySpotifyAPI: ObservableObject {
         self.Session = session
         self.accessToken = session.accessToken
         self.refreshToken = session.refreshToken
-        self.initializeData()
-        self.fetchPlaylists(url: "https://api.spotify.com/v1/me/playlists?limit=50")
-        self.fetchAlbums(url: "https://api.spotify.com/v1/me/albums?limit=50")
+        if self.playlists.count == 1 && self.albums.isEmpty {
+            self.fetchPlaylists(url: "https://api.spotify.com/v1/me/playlists?limit=50")
+            self.fetchAlbums(url: "https://api.spotify.com/v1/me/albums?limit=50")
+        }
     }
     
     func handleReponse(_ response: HTTPURLResponse) -> Bool {
