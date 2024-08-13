@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct TrackView: View {
     @StateObject var playlist: Playlist
@@ -67,7 +68,9 @@ struct TrackView: View {
                 .padding(.leading, 12)
                 Spacer()
                 Menu{
-                    Button("YouTube", action: someFunction)
+                    Button("YouTube", systemImage: "arrow.up.forward.app", action: {
+                        someFunction(track)
+                    })
                 } label: {
                     Label("", systemImage: "ellipsis.circle")
                         .font(.custom("Helvetica", size: 18))
@@ -85,7 +88,26 @@ struct TrackView: View {
     }
 }
 
-func someFunction() {
-        print("Hello, World!")
+func openYouTube(_ YTid: String?) -> Bool {
+    if let vID = YTid {
+        if let youtubeURL = URL(string: "https://www.youtube.com/watch?v=" + vID) {
+            UIApplication.shared.open(youtubeURL)
+            return true
+        }
     }
+    return false
+}
+
+func someFunction(_ track: Song) {
+    if !openYouTube(track.YTid) {
+        guard let isrc = track.external_ids["isrc"] as? String else { return }
+        print(isrc)
+        YouTubeAPI.isrcSearch(isrc) { YTid in
+            DispatchQueue.main.async {
+                track.YTid = YTid
+                _ = openYouTube(track.YTid)
+            }
+        }
+    }
+}
 
