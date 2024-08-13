@@ -23,7 +23,7 @@ struct HomeView: View {
                     .resizable()
                     .padding(.top, 12)
                     .scaledToFit()
-                Button("Connect Spotify Account") {
+                Button("Connect Spotify Account", systemImage: "arrow.up.forward.app") {
                     spotifyManager.didTapConnect()
                 }
                 .font(.custom("Helvetica", size: 18))
