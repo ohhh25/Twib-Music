@@ -99,13 +99,23 @@ func openYouTube(_ YTid: String?) -> Bool {
 }
 
 func someFunction(_ track: Song) {
-    if !openYouTube(track.YTid) {
+    /*if !openYouTube(track.YTid) {
         guard let isrc = track.external_ids["isrc"] as? String else { return }
         print(isrc)
         YouTubeAPI.isrcSearch(isrc) { YTid in
             DispatchQueue.main.async {
                 track.YTid = YTid
                 _ = openYouTube(track.YTid)
+            }
+        }
+    }*/
+    guard let isrc = track.external_ids["isrc"] as? String else { return }
+    TwibServerAPI.isrcSearch(isrc) { url in
+        if let url = url {
+            if let youtubeURL = URL(string: url) {
+                DispatchQueue.main.async {
+                    UIApplication.shared.open(youtubeURL)
+                }
             }
         }
     }
