@@ -35,4 +35,12 @@ class MyTwibServerAPI {
             completion(nil)
         }
     }
+    
+    func downloadPlaylist(_ jsonData: Data) {
+        guard let url = URL(string: self.base) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = ["Content-Type": "application/json"]
+        request.httpBody = jsonData
+    }
 }
