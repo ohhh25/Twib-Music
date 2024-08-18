@@ -14,6 +14,8 @@ class Playlist: Identifiable, ObservableObject {
     let image_url: String
     let visible: Int
     @Published var tracks: [Song] = []
+
+    var requestBody: [String: Any] = [:]
     
     init(name: String, description: String, tracks_url: String, image_url: String, visible: Int) {
         self.name = name
@@ -34,6 +36,37 @@ class Playlist: Identifiable, ObservableObject {
     func addTracks(_ tracks: [Song]) {
         DispatchQueue.main.async {
             self.tracks.append(contentsOf: tracks)
+        }
+    }
+    
+    func createRequestBody() {
+        self.requestBody["metadata"] = self.tracks.map { song in
+            return [
+                "isrc": song.external_ids["isrc"] as? String ?? "",
+                "sId": song.sID,
+                "name": song.name,
+                "artist": song.artist,
+                "album": song.album,
+                "other_artists": song.others,
+                "duration": song.duration,
+                "track_number": song.track_number,
+                "explicit": song.explicit
+            ]
+        }
+    }
+    
+    func downloadTracks() {
+        if self.requestBody.isEmpty {
+            self.createRequestBody()
+        }
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self.requestBody, options: .prettyPrinted)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print(jsonString)
+            }
+            TwibServerAPI.downloadPlaylist(jsonData)
+        } catch {
+            print("Failed to serialize the JSON: \(error.localizedDescription)")
         }
     }
 }
