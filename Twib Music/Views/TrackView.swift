@@ -27,6 +27,10 @@ struct TrackView: View {
             }
                 .padding(.leading, 24)
             Spacer()
+            Button("", systemImage: "arrow.down.circle") {
+                playlist.downloadTracks()
+            }
+            .font(.custom("Helvetica", size: 36))
             AsyncImage(url: URL(string: playlist.image_url)) { image in
                 image
                     .resizable()
