@@ -5,8 +5,7 @@ import fs from "fs";
 import ytdl from "@distube/ytdl-core";
 import { url } from "inspector";
 
-//const hostname = "127.0.0.1";
-const hostname = "192.168.86.46";
+const hostname = "127.0.0.1";
 const port = 3000;
 
 const homepage = `http://${hostname}:${port}`;
