@@ -36,11 +36,22 @@ class MyTwibServerAPI {
         }
     }
     
-    func downloadPlaylist(_ jsonData: Data) {
+    func downloadPlaylist(_ jsonData: Data, completion: @escaping ([String]?) -> Void) {
         guard let url = URL(string: self.base) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = ["Content-Type": "application/json"]
         request.httpBody = jsonData
+        SpotifyAPI.satisfyRequest(request) { data in
+            guard let data = data else { return }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: [String]] {
+                completion(json["youtube"])
+                return
+            }
+            else {
+                print("Failed to parse the data in JSON")
+            }
+            completion(nil)
+        }
     }
 }

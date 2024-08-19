@@ -2,7 +2,8 @@ import express from "express";
 import apiLogger from "./apiLogger.mjs";
 import yts from "yt-search";
 
-const hostname = "127.0.0.1";
+//const hostname = "127.0.0.1";
+const hostname = "192.168.86.46";
 const port = 3000;
 
 const homepage = `http://${hostname}:${port}`;
@@ -46,10 +47,12 @@ app.post("/api/Twib-Music", express.json(), async (req, res) => {
       console.log("No ISRC code found. Performing a manual search...");
       const  { query } = `${song.title} ${song.artist}`;
       const { videos } = await yts(query);
-      return videos[0].url;
+      //return videos[0].url;
+      return videos[0].url.split("watch?v=").pop();
     } else {
       const { videos } = await yts(isrc);
-      return videos[0].url;
+      // return videos[0].url;
+      return videos[0].url.split("watch?v=").pop();
     }
   }));
   res.status(200).json({"youtube": ytLinks});

@@ -55,6 +55,14 @@ class Playlist: Identifiable, ObservableObject {
         }
     }
     
+    func addYTids(_ YTids: [String]) {
+        if self.tracks.count == YTids.count {
+            for (index, _) in self.tracks.enumerated() {
+                self.tracks[index].YTid = YTids[index]
+            }
+        }
+    }
+    
     func downloadTracks() {
         if self.requestBody.isEmpty {
             self.createRequestBody()
@@ -64,7 +72,10 @@ class Playlist: Identifiable, ObservableObject {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print(jsonString)
             }
-            TwibServerAPI.downloadPlaylist(jsonData)
+            TwibServerAPI.downloadPlaylist(jsonData) { YTids in
+                guard let YTids = YTids else { return }
+                self.addYTids(YTids)
+            }
         } catch {
             print("Failed to serialize the JSON: \(error.localizedDescription)")
         }
