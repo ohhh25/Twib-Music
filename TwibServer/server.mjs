@@ -1,6 +1,9 @@
 import express from "express";
 import apiLogger from "./apiLogger.mjs";
 import yts from "yt-search";
+import fs from "fs";
+import ytdl from "@distube/ytdl-core";
+import { url } from "inspector";
 
 //const hostname = "127.0.0.1";
 const hostname = "192.168.86.46";
@@ -8,6 +11,10 @@ const port = 3000;
 
 const homepage = `http://${hostname}:${port}`;
 const gitHub = "https://github.com/ohhh25/Twib-Music";
+
+if (!fs.existsSync('./downloads')) {
+  fs.mkdirSync('./downloads');
+}
 
 var app = express();
 app.set("json spaces", 2);
@@ -39,23 +46,65 @@ app.get("/api/Twib-Music", (req, res) => {
   }
 });
 
-app.post("/api/Twib-Music", express.json(), async (req, res) => {
+const getQuery = (song) => {
+  const { isrc, title, artist } = song;
+  if (isrc) {
+    return isrc;
+  }
+  console.log("No ISRC code found. Performing a manual search...");
+  return `${title} ${artist}`;
+}
+
+const search = async (song) => {
+  const { sID } = song;
+  const filePath = `./downloads/${sID}.m4a`;
+  const query = getQuery(song);
+  const { videos } = await yts(query);
+  return {
+    url: videos[0].url,
+    filePath: filePath
+  };
+}
+
+const downloadList = async (req, res, next) => {
   const { metadata } = req.body;
-  const ytLinks = await Promise.all(metadata.map( async (song) => {
-    const { isrc } = song;
-    if (!isrc) {
-      console.log("No ISRC code found. Performing a manual search...");
-      const  { query } = `${song.title} ${song.artist}`;
-      const { videos } = await yts(query);
-      //return videos[0].url;
-      return videos[0].url.split("watch?v=").pop();
-    } else {
-      const { videos } = await yts(isrc);
-      // return videos[0].url;
-      return videos[0].url.split("watch?v=").pop();
-    }
-  }));
-  res.status(200).json({"youtube": ytLinks});
+  try {
+    const ytLinks = await Promise.all(metadata.map( async (song) => {
+      const { url, filePath } = await search(song);
+      const audioStream = ytdl(url, { quality: '140' });
+
+      const download = new Promise((resolve, reject) => {
+        audioStream.pipe(fs.createWriteStream(filePath));
+
+        audioStream.on('error', (err) => {
+          console.error(`Error in audio stream: ${err.message}`);
+          fs.unlink(filePath, () => {}); // Clean up empty file
+          reject(err);
+        });
+
+        audioStream.on('end', () => {
+          console.log(`Downloaded ${song.name} by ${song.artist}`);
+          resolve();
+        });
+      });
+
+      await download;
+      return url;
+    }));
+
+    req.ytLinks = ytLinks;
+    next();
+  } catch (err) {
+    console.error(`Error in download: ${err.message}`);
+    res.status(500).send("Error downloading songs");
+  }
+}
+
+app.post("/api/Twib-Music", express.json(), async (req, res) => {
+  await downloadList(req, res, () => {
+    console.log("Downloaded all songs!");
+    res.status(200).json({"youtube": req.ytLinks});
+  });
 });
 
 app.get("*", (req, res) => {
