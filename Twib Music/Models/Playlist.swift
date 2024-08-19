@@ -43,7 +43,7 @@ class Playlist: Identifiable, ObservableObject {
         self.requestBody["metadata"] = self.tracks.map { song in
             return [
                 "isrc": song.external_ids["isrc"] as? String ?? "",
-                "sId": song.sID,
+                "sID": song.sID,
                 "name": song.name,
                 "artist": song.artist,
                 "album": song.album,
