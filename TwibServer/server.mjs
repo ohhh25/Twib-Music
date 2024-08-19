@@ -1,5 +1,4 @@
 import express from "express";
-import fs from "fs";
 import musicAPI from "./API/TwibMusic.mjs";
 
 const hostname = "127.0.0.1";
@@ -7,10 +6,6 @@ const port = 3000;
 
 const homepage = `http://${hostname}:${port}`;
 const gitHub = "https://github.com/ohhh25/Twib-Music";
-
-if (!fs.existsSync('./downloads')) {
-  fs.mkdirSync('./downloads');
-}
 
 var app = express();
 app.use("/Twib-Music", express.static("public"));

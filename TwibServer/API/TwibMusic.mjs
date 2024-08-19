@@ -1,7 +1,10 @@
 import express from "express";
 import fs from "fs";
+import path from "path";
+
 import yts from "yt-search";
 import ytdl from "@distube/ytdl-core";
+import archiver from "archiver";
 
 import apiLogger from "./logger.mjs";
 
@@ -17,51 +20,40 @@ const search = async (song) => {
   return {url: videos[0].url, filePath: `./downloads/${sID}.m4a`};
 }
 
-const singleDownload = async (song) => {
+const singleDownload = async (song, zipStream) => {
   const { url, filePath } = await search(song);    // get URL and file path
   const audioStream = ytdl(url, { quality: '140' });    // get audio stream
+  const fileName = path.basename(filePath);
 
-  const download = new Promise((resolve, reject) => {
-    audioStream.pipe(fs.createWriteStream(filePath));    // pipe stream to file
-    
+  zipStream.append(audioStream, { name: fileName });   // append stream to zip
+
+  return new Promise((resolve, reject) => {
     audioStream.on('error', (err) => {
       console.error(`Error in audio stream: ${err.message}`);
-      fs.unlink(filePath, () => {}); // Clean up empty file
       reject(err);
     });
-    
+
     audioStream.on('end', () => {
       console.log(`Downloaded ${song.name} by ${song.artist}`);
       resolve();
     });
   });
-
-  await download;
-  return filePath;
-}
-
-const downloadList = async (req, res, next) => {
-  const { metadata } = req.body;    // extract metadata from request body
-  try {
-    const ytLinks = await Promise.all(metadata.map( async (song) => {
-      const url = await singleDownload(song);
-      return url;
-    }));
-
-    req.ytLinks = ytLinks;
-    next();
-
-  } catch (err) {
-    console.error(`Error in download: ${err.message}`);
-    res.status(500).send("Error downloading songs");
-  }
 }
 
 router.post("/", async (req, res) => {
-  await downloadList(req, res, () => {
-    console.log("Downloaded all songs!");
-    res.status(200).json({"youtube": req.ytLinks});
-  });
+  const { metadata } = req.body;    // extract metadata from request body
+  try {
+    const zipStream = archiver('zip', { zlib: { level: 9 } });
+    res.attachment('songs.zip');
+    zipStream.pipe(res);    // pipe zip stream to response
+
+    await Promise.all(metadata.map(song => singleDownload(song, zipStream)));
+    zipStream.finalize();    // finalize zip stream
+  }
+  catch (err) {
+    console.error(`Error in POST /api/Twib-Music: ${err.message}`);
+    res.status(500).send("Error processing request");
+  }
 });
 
 export default router;
