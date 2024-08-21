@@ -10,6 +10,8 @@ import SpotifyiOS
 
 @main
 struct Twib_MusicApp: App {
+    var StorageManager = TwibStorageManager()
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
