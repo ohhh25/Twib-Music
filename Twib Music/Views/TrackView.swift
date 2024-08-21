@@ -7,6 +7,9 @@
 
 import SwiftUI
 import UIKit
+import AVFoundation
+
+var player: AVPlayer?
 
 struct TrackView: View {
     @StateObject var playlist: Playlist
@@ -92,37 +95,10 @@ struct TrackView: View {
     }
 }
 
-func openYouTube(_ YTid: String?) -> Bool {
-    if let vID = YTid {
-        if let youtubeURL = URL(string: "https://www.youtube.com/watch?v=" + vID) {
-            UIApplication.shared.open(youtubeURL)
-            return true
-        }
-    }
-    return false
-}
-
 func someFunction(_ track: Song) {
-    if !openYouTube(track.YTid) {
-        guard let isrc = track.external_ids["isrc"] as? String else { return }
-        print(isrc)
-        YouTubeAPI.isrcSearch(isrc) { YTid in
-            DispatchQueue.main.async {
-                track.YTid = YTid
-                _ = openYouTube(track.YTid)
-            }
-        }
+    guard let location = track.location else { print("File not found"); return }
+    DispatchQueue.main.async {
+        player = AVPlayer(url: location)
+        player?.play()
     }
-    /*
-    guard let isrc = track.external_ids["isrc"] as? String else { return }
-    TwibServerAPI.isrcSearch(isrc) { url in
-        if let url = url {
-            if let youtubeURL = URL(string: url) {
-                DispatchQueue.main.async {
-                    UIApplication.shared.open(youtubeURL)
-                }
-            }
-        }
-    }*/
 }
-
