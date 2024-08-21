@@ -17,6 +17,13 @@ const search = async (song) => {
   const { isrc, sID, title, artist } = song;    // extract song metadata
   const query = isrc ? isrc : `${title} ${artist}`;    // search query
   const { videos } = await yts(query);    // search for videos
+  if (!videos.length && query === isrc) {
+    console.warn(`No results found for ${query} Retrying search with different query`);
+    const { videos } = await yts(`${title}`);   // retry search with title
+    if (!videos.length) {
+      throw new Error(`No results found for ${title}`);
+    } return {url: videos[0].url, filePath: `./downloads/${sID}.m4a`};
+  }
   return {url: videos[0].url, filePath: `./downloads/${sID}.m4a`};
 }
 
@@ -48,6 +55,7 @@ router.post("/", async (req, res) => {
     zipStream.pipe(res);    // pipe zip stream to response
 
     await Promise.all(metadata.map(song => singleDownload(song, zipStream)));
+    console.log("Request processed successfully");
     zipStream.finalize();    // finalize zip stream
   }
   catch (err) {
