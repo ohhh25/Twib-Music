@@ -24,8 +24,7 @@ class Song: Identifiable {
     
     let popularity: Int
     
-    // matching
-    var YTid: String?
+    var location: URL?
     
     init(name: String, artists: [[String: Any]],
          album: [String: Any], track_number: Int,
