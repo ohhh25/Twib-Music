@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Song: Identifiable {
+class Song: Identifiable, ObservableObject {
     let name: String
     let artist: String
     var others: [String] = []
@@ -24,7 +24,8 @@ class Song: Identifiable {
     
     let popularity: Int
     
-    var location: URL?
+    let location: URL
+    @Published var isDownloaded: Bool = false
     
     init(name: String, artists: [[String: Any]],
          album: [String: Any], track_number: Int,
@@ -47,5 +48,13 @@ class Song: Identifiable {
         self.preview_url = preview_url
         self.explicit = explicit
         self.popularity = popularity
+        
+        self.location = StorageManager.songsDirectoryURL.appendingPathComponent(sID + ".m4a")
+    }
+    
+    func updateDownloadStatus() {
+        if StorageManager.manager.fileExists(atPath: location.path) {
+            self.isDownloaded = true
+        }
     }
 }

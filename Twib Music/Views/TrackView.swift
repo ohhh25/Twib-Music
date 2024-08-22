@@ -7,9 +7,6 @@
 
 import SwiftUI
 import UIKit
-import AVFoundation
-
-var player: AVPlayer?
 
 struct TrackView: View {
     @StateObject var playlist: Playlist
@@ -58,36 +55,7 @@ struct TrackView: View {
         }
         // MARK: REAL BODY
         List(Array(playlist.tracks.enumerated()), id: \.offset) { idx, track in
-            HStack {
-                if playlist is Twib_Music.Album {
-                    Text("\(idx + 1)")
-                        .font(.custom("Helvetica", size: 16))
-                        .frame(width: 18, alignment: .trailing)
-                        .padding(.leading, -6)
-                }
-                else { ImageView(image_url: track.image_url, size: 48).padding(.leading, -6) }
-                VStack(alignment: .leading) {
-                    Text(track.name)
-                        .font(.custom("Helvetica", size: 16))
-                        .padding(.bottom, 2)
-                        .lineLimit(1)
-                    Text(track.artist)
-                        .font(.custom("Helvetica", size: 12))
-                        .fontWeight(.light)
-                        .lineLimit(1)
-                }
-                .padding(.leading, 12)
-                Spacer()
-                Menu{
-                    Button("YouTube", systemImage: "arrow.up.forward.app", action: {
-                        someFunction(track)
-                    })
-                } label: {
-                    Label("", systemImage: "ellipsis.circle")
-                        .font(.custom("Helvetica", size: 18))
-                }
-                .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: -18))
-            }
+            ItemView(track: track, idx: idx, isAlbum: playlist is Twib_Music.Album)
         }
         .onAppear() {
             print(playlist.description)
@@ -99,10 +67,3 @@ struct TrackView: View {
     }
 }
 
-func someFunction(_ track: Song) {
-    guard let location = track.location else { print("File not found"); return }
-    DispatchQueue.main.async {
-        player = AVPlayer(url: location)
-        player?.play()
-    }
-}

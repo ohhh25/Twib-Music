@@ -61,7 +61,7 @@ class Playlist: Identifiable, ObservableObject {
             return
         }
         for (index, _) in self.tracks.enumerated() {
-            self.tracks[index].location = URLs[index]
+            self.tracks[index].updateDownloadStatus()
         }
     }
     

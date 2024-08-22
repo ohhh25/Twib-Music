@@ -25,6 +25,7 @@
 		F4B7B4CB2C35235800A348D3 /* Twib_MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */; };
 		F4B7B4CF2C35235900A348D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B7B4CE2C35235900A348D3 /* Assets.xcassets */; };
 		F4B7B4D22C35235900A348D3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B7B4D12C35235900A348D3 /* Preview Assets.xcassets */; };
+		F4D95A272C76B51B005AF5F8 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D95A262C76B51B005AF5F8 /* ItemView.swift */; };
 		F4E278682C39070F00C924EC /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4E278672C39070F00C924EC /* SpotifyiOS */; };
 		F4E2786E2C39119100C924EC /* Twib-Music-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E2786D2C39119100C924EC /* Twib-Music-Bridging-Header.m */; };
 		F4EB28E42C37A5A5003406EC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB28E32C37A5A5003406EC /* HomeView.swift */; };
@@ -48,6 +49,7 @@
 		F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Twib_MusicApp.swift; sourceTree = "<group>"; };
 		F4B7B4CE2C35235900A348D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4B7B4D12C35235900A348D3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F4D95A262C76B51B005AF5F8 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		F4E2786C2C39119000C924EC /* Twib Music-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Twib Music-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4E2786D2C39119100C924EC /* Twib-Music-Bridging-Header.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Twib-Music-Bridging-Header.m"; sourceTree = "<group>"; };
 		F4EB28E32C37A5A5003406EC /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				F49F1F252C686BF3004EC8F9 /* LibraryView.swift */,
 				F471AF2F2C5C4B9F00CC1E62 /* PlaylistView.swift */,
 				F48DBF492C61591B00FF8D9F /* TrackView.swift */,
+				F4D95A262C76B51B005AF5F8 /* ItemView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				F48DBF502C627BE600FF8D9F /* Song.swift in Sources */,
 				F441B22E2C6563BB006F2118 /* HeadingView.swift in Sources */,
 				F471AF302C5C4B9F00CC1E62 /* PlaylistView.swift in Sources */,
+				F4D95A272C76B51B005AF5F8 /* ItemView.swift in Sources */,
 				F476A66D2C5AF4D0008F5E53 /* MySpotifyAPI.swift in Sources */,
 				F48DBF4A2C61591B00FF8D9F /* TrackView.swift in Sources */,
 				F45B9E902C6AC1B500BE0B84 /* MyYouTubeAPI.swift in Sources */,

@@ -39,7 +39,6 @@ class MyTwibServerAPI {
                 return
             }
             let zipFileURL = StorageManager.zipsDirectoryURL.appendingPathComponent("songs.zip")
-            print("Zip file URL: \(zipFileURL)")
             do {
                 try data.write(to: zipFileURL)
                 try Zip.unzipFile(zipFileURL, destination: StorageManager.songsDirectoryURL, overwrite: true, password: nil)
