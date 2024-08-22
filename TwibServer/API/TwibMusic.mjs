@@ -12,6 +12,8 @@ const router = express.Router();
 router.use(apiLogger);
 router.use(express.json());
 
+const agent = ytdl.createAgent(JSON.parse(fs.readFileSync("cookies.json")));
+
 const chunkArray = (array, size) => {
   const result = [];
   for (let i = 0; i < array.length; i += size) {
@@ -37,7 +39,7 @@ const search = async (song) => {
 
 const singleDownload = async (song, zipStream) => {
   const { url, filePath } = await search(song);    // get URL and file path
-  const audioStream = ytdl(url, { quality: '140' });    // get audio stream
+  const audioStream = ytdl(url, { quality: '140' }, { agent });    // get audio stream
   const fileName = path.basename(filePath);
 
   zipStream.append(audioStream, { name: fileName });   // append stream to zip
@@ -57,7 +59,7 @@ const singleDownload = async (song, zipStream) => {
 
 router.post("/", async (req, res) => {
   const { metadata } = req.body;    // extract metadata from request body
-  const batchSize = 10;    // number of songs to download in each batch
+  const batchSize = 20;    // number of songs to download in each batch
 
   try {
     const zipStream = archiver('zip', { zlib: { level: 9 } });
