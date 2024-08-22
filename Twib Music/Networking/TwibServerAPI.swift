@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import Zip
 
-//let hostname = "HOMENAME"
-let hostname = "192.168.86.46"
+let hostname = "HOMENAME"
 let port = 3000
 
 var TwibServerAPI = MyTwibServerAPI(hostname: hostname, port: port)
@@ -39,18 +37,8 @@ class MyTwibServerAPI {
                 completion(false)
                 return
             }
-            let zipFileURL = StorageManager.zipsDirectoryURL.appendingPathComponent("songs.zip")
-            do {
-                try data.write(to: zipFileURL)
-                try Zip.unzipFile(zipFileURL, destination: StorageManager.songsDirectoryURL, overwrite: true, password: nil)
-                try StorageManager.manager.removeItem(at: zipFileURL)
-                completion(true)
-                return
-            } catch {
-                print("Error processing ZIP file: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
+            completion(StorageManager.handleDownload(data))
+            return
         }
         task.resume()
     }

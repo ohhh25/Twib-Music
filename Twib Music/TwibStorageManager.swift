@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Zip
 
 var StorageManager = TwibStorageManager()
 let reset: Bool = false
@@ -17,6 +18,7 @@ class TwibStorageManager {
     let zipsDirectoryURL: URL
     let songsDirectoryURL: URL
     
+    // MARK: BASIC INIT
     func clearDirectory(at url: URL) throws {
         let contents = try manager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
         for fileURL in contents {
@@ -24,24 +26,40 @@ class TwibStorageManager {
         }
     }
     
+    func resetStorage() throws {
+        print("Resetting....")
+        try clearDirectory(at: zipsDirectoryURL)
+        try clearDirectory(at: songsDirectoryURL)
+        print("Done!")
+    }
+    
     init() {
         do {
-            // Define directory URLs
             self.zipsDirectoryURL = tmpDirectoryURL.appendingPathComponent("zips")
             self.songsDirectoryURL = appSupportDirectoryURL.appendingPathComponent("song_downloads")
             
-            // Create new directories
             try manager.createDirectory(at: zipsDirectoryURL, withIntermediateDirectories: true)
             try manager.createDirectory(at: songsDirectoryURL, withIntermediateDirectories: true)
             
-            if reset {
-                // Clear existing contents
-                try clearDirectory(at: zipsDirectoryURL)
-                try clearDirectory(at: songsDirectoryURL)
-            }
+            if reset { try self.resetStorage() }
         }
         catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func handleDownload(_ incomingData: Data) -> Bool {
+        let uuid = UUID().uuidString
+        let fileURL = zipsDirectoryURL.appendingPathComponent(uuid + ".zip")
+        do {
+            try incomingData.write(to: fileURL)
+            try Zip.unzipFile(fileURL, destination: songsDirectoryURL,
+                              overwrite: true, password: nil)
+            try manager.removeItem(at: fileURL)
+            return true
+        } catch {
+            print("Error processing ZIP file: \(error.localizedDescription)")
+            return false
         }
     }
 }
