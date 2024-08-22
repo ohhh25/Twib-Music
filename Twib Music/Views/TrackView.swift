@@ -28,11 +28,8 @@ struct TrackView: View {
             }
                 .padding(.leading, 24)
             Spacer()
-            Button("", systemImage: downloadImage) {
-                downloadImage = "arrow.down.circle.dotted"
-                playlist.downloadTracks { success in
-                    downloadImage = success ? "arrow.down.circle.fill" : "arrow.down.app.dashed.trianglebadge.exclamationmark"
-                }
+            Button("", systemImage: playlist.downloadStatusIcon) {
+                playlist.downloadTracks()
             }
             .font(.custom("Helvetica", size: 36))
             AsyncImage(url: URL(string: playlist.image_url)) { image in
@@ -58,7 +55,6 @@ struct TrackView: View {
             ItemView(track: track, idx: idx, isAlbum: playlist is Twib_Music.Album)
         }
         .onAppear() {
-            print(playlist.description)
             let url = playlist is Twib_Music.Album ? playlist.tracks_url : playlist.tracks_url + "?limit=50"
             if playlist.tracks.isEmpty {
                 SpotifyAPI.fetchTracks(playlist, url: url)

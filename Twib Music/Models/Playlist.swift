@@ -16,6 +16,8 @@ class Playlist: Identifiable, ObservableObject {
     @Published var tracks: [Song] = []
 
     var requestBody: [String: Any] = [:]
+    var downloadStatus = "Not Downloaded"
+    @Published var downloadStatusIcon = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
     
     init(name: String, description: String, tracks_url: String, image_url: String, visible: Int) {
         self.name = name
@@ -36,6 +38,7 @@ class Playlist: Identifiable, ObservableObject {
     func addTracks(_ tracks: [Song]) {
         DispatchQueue.main.async {
             self.tracks.append(contentsOf: tracks)
+            self.syncDownloadStatus()
         }
     }
     
@@ -55,34 +58,52 @@ class Playlist: Identifiable, ObservableObject {
         }
     }
     
-    func addLocation(_ URLs: [URL]) {
-        if self.tracks.count != URLs.count {
-            print("Number of tracks does not match number of URLs")
-            return
-        }
-        for (index, _) in self.tracks.enumerated() {
-            self.tracks[index].updateDownloadStatus()
+    func getStatusIcon() -> String {
+        switch self.downloadStatus {
+        case "Not downloaded":
+            return "arrow.down.circle"
+        case "in progress":
+            return "arrow.down.circle.dotted"
+        case "complete":
+            return "arrow.down.circle.fill"
+        default:
+            return "arrow.down.app.dashed.trianglebadge.exclamationmark"
         }
     }
     
-    func downloadTracks(completion: @escaping (Bool) -> Void) {
+    func setDownloadStatus(_ status: String) {
+        DispatchQueue.main.async {
+            self.downloadStatus = status
+            self.downloadStatusIcon = self.getStatusIcon()
+        }
+    }
+    
+    func syncDownloadStatus() {
+        DispatchQueue.main.async {
+            var allDownloaded = true
+            for track in self.tracks {
+                track.syncDownloadStatus()
+                if !track.isDownloaded {
+                    allDownloaded = false
+                }
+            }
+            self.setDownloadStatus(allDownloaded ? "complete" : "Not downloaded")
+        }
+    }
+    
+    func downloadTracks() {
+        self.setDownloadStatus("in progress")
         if self.requestBody.isEmpty {
             self.createRequestBody()
         }
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: self.requestBody, options: .prettyPrinted)
-            TwibServerAPI.downloadPlaylist(jsonData) { URLs in
-                guard let URLs = URLs else { return }
-                DispatchQueue.main.async {
-                    self.addLocation(URLs)
-                }
-                completion(true)
-                return
+            TwibServerAPI.downloadPlaylist(jsonData) { success in
+                success ? self.syncDownloadStatus() : self.setDownloadStatus("failed")
             }
         } catch {
             print("Failed to serialize the JSON: \(error.localizedDescription)")
-            completion(false)
-            return
+            syncDownloadStatus()
         }
     }
 }

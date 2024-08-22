@@ -8,7 +8,8 @@
 import Foundation
 import Zip
 
-let hostname = "HOSTNAME"
+//let hostname = "HOMENAME"
+let hostname = "192.168.86.46"
 let port = 3000
 
 var TwibServerAPI = MyTwibServerAPI(hostname: hostname, port: port)
@@ -30,25 +31,24 @@ class MyTwibServerAPI {
         return request
     }
     
-    func downloadPlaylist(_ jsonData: Data, completion: @escaping ([URL]?) -> Void) {
+    func downloadPlaylist(_ jsonData: Data, completion: @escaping (Bool) -> Void) {
         let request = prepareDownloadRequest(jsonData)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
                 print("Error downloading data: \(error?.localizedDescription ?? "Unknown error")")
-                completion(nil)
+                completion(false)
                 return
             }
             let zipFileURL = StorageManager.zipsDirectoryURL.appendingPathComponent("songs.zip")
             do {
                 try data.write(to: zipFileURL)
                 try Zip.unzipFile(zipFileURL, destination: StorageManager.songsDirectoryURL, overwrite: true, password: nil)
-                let fileURLs = try StorageManager.manager.contentsOfDirectory(at: StorageManager.songsDirectoryURL, includingPropertiesForKeys: nil)
                 try StorageManager.manager.removeItem(at: zipFileURL)
-                completion(fileURLs)
+                completion(true)
                 return
             } catch {
                 print("Error processing ZIP file: \(error.localizedDescription)")
-                completion(nil)
+                completion(false)
                 return
             }
         }

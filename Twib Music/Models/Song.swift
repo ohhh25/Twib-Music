@@ -25,7 +25,7 @@ class Song: Identifiable, ObservableObject {
     let popularity: Int
     
     let location: URL
-    @Published var isDownloaded: Bool = false
+    @Published var isDownloaded = false
     
     init(name: String, artists: [[String: Any]],
          album: [String: Any], track_number: Int,
@@ -50,11 +50,10 @@ class Song: Identifiable, ObservableObject {
         self.popularity = popularity
         
         self.location = StorageManager.songsDirectoryURL.appendingPathComponent(sID + ".m4a")
+        self.syncDownloadStatus()
     }
     
-    func updateDownloadStatus() {
-        if StorageManager.manager.fileExists(atPath: location.path) {
-            self.isDownloaded = true
-        }
+    func syncDownloadStatus() {
+        self.isDownloaded = StorageManager.manager.fileExists(atPath: location.path)
     }
 }
