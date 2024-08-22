@@ -65,7 +65,7 @@ class Playlist: Identifiable, ObservableObject {
         }
     }
     
-    func downloadTracks() {
+    func downloadTracks(completion: @escaping (Bool) -> Void) {
         if self.requestBody.isEmpty {
             self.createRequestBody()
         }
@@ -76,9 +76,13 @@ class Playlist: Identifiable, ObservableObject {
                 DispatchQueue.main.async {
                     self.addLocation(URLs)
                 }
+                completion(true)
+                return
             }
         } catch {
             print("Failed to serialize the JSON: \(error.localizedDescription)")
+            completion(false)
+            return
         }
     }
 }

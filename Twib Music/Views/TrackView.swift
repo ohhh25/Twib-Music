@@ -14,6 +14,7 @@ var player: AVPlayer?
 struct TrackView: View {
     @StateObject var playlist: Playlist
     @State var isPlaying = false
+    @State var downloadImage = "arrow.down.circle"
     
     var body: some View {
         // MARK: JUST HEADING
@@ -30,8 +31,11 @@ struct TrackView: View {
             }
                 .padding(.leading, 24)
             Spacer()
-            Button("", systemImage: "arrow.down.circle") {
-                playlist.downloadTracks()
+            Button("", systemImage: downloadImage) {
+                downloadImage = "arrow.down.circle.dotted"
+                playlist.downloadTracks { success in
+                    downloadImage = success ? "arrow.down.circle.fill" : "arrow.down.app.dashed.trianglebadge.exclamationmark"
+                }
             }
             .font(.custom("Helvetica", size: 36))
             AsyncImage(url: URL(string: playlist.image_url)) { image in
