@@ -18,7 +18,7 @@ class Song: Identifiable, ObservableObject {
     
     // Help with matching
     let sID: String
-    let external_ids: [String: Any]
+    var external_ids: [String: Any]
     let preview_url: String
     let explicit: Int
     

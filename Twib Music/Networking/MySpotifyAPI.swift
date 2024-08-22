@@ -17,6 +17,7 @@ class MySpotifyAPI: ObservableObject {
     private var accessToken: String = ""
     private var refreshToken: String = ""
     
+    // MARK: BASIC INIT
     init() {
         self.playlists = [Playlist(name: "Liked Songs", description: "",
                                    tracks_url: "https://api.spotify.com/v1/me/tracks",
@@ -35,6 +36,7 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
+    // MARK: HELPER FUNCTIONS
     func handleReponse(_ response: HTTPURLResponse) -> Bool {
         let code = response.statusCode
         switch code {
@@ -81,6 +83,7 @@ class MySpotifyAPI: ObservableObject {
         task.resume()
     }
     
+    // MARK: PLAYLISTS METADATA
     func parsePlaylists(_ array: [[String: Any]]) -> [Playlist] {
         let parsedPlaylists = array.compactMap { playlist -> Playlist? in
             guard
@@ -94,7 +97,9 @@ class MySpotifyAPI: ObservableObject {
                 return nil
             }
             let visible = (playlist["public"] as? Int) ?? -1
-            return Playlist(name: name, description: description, tracks_url: tracks_url, image_url: image_url, visible: visible)
+            return Playlist(name: name, description: description,
+                            tracks_url: tracks_url, image_url: image_url,
+                            visible: visible)
         }
         return parsedPlaylists
     }
@@ -129,6 +134,7 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
+    // MARK: ALBUMS METADATA
     func parseAlbums(_ array: [[String: Any]]) -> [Album] {
         let parsedAlbums: [Album] = array.compactMap { item -> Album? in
             guard
@@ -186,6 +192,7 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
+    // MARK: TRACKS METADATA
     func parseTracks(_ array: [[String: Any]], isAlbum: Bool) -> [Song] {
         let songs: [Song] = array.compactMap { item -> Song? in
             guard let song = isAlbum ? item : item["track"] as? [String: Any] else { return nil }
@@ -197,7 +204,6 @@ class MySpotifyAPI: ObservableObject {
                 let name = song["name"] as? String,
                 let artists = song["artists"] as? [[String: Any]],
                 let album = (isAlbum) ? [:] : song["album"] as? [String: Any],
-                //let album = song["album"] as? [String: Any],
                 let track_number = song["track_number"] as? Int,
                 let duration = song["duration_ms"] as? Int,
                 let sID = song["id"] as? String
@@ -208,7 +214,11 @@ class MySpotifyAPI: ObservableObject {
             let preview_url = (song["preview_url"] as? String) ?? ""
             let explicit = (song["explicit"] as? Int) ?? -1
             let popularity = song["popularity"] as? Int ?? -1
-            return Song(name: name, artists: artists, album: album, track_number: track_number, duration: duration, sID: sID, external_ids: external_ids, preview_url: preview_url, explicit: explicit, popularity: popularity)
+            return Song(name: name, artists: artists, album: album,
+                        track_number: track_number, duration: duration,
+                        sID: sID, external_ids: external_ids,
+                        preview_url: preview_url, explicit: explicit,
+                        popularity: popularity)
         }
         return songs
     }
@@ -236,6 +246,39 @@ class MySpotifyAPI: ObservableObject {
             }
             else {
                 print("Failed to parse the JSON data")
+            }
+        }
+    }
+    
+    // MARK: ISRC FOR ALBUM TRACKS
+    func add_isrc(_ tracks: [Song], url: String, completion: @escaping ([Song]?) -> Void){
+        // Setup Request
+        self.checkSession()
+        guard let url = URL(string: url) else { completion(nil); return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        self.satisfyRequest(request) { data in
+            guard let data else { completion(nil); return }
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                if let items = json["tracks"] as? [[String: Any]] {
+                    let eIDs = items.map { item in
+                        return item["external_ids"] as? [String: Any] ?? [:]
+                    }
+                    zip(eIDs, tracks).forEach { (eID, track) in
+                        track.external_ids = eID
+                    }
+                    completion(tracks)
+                    return
+                } else {
+                    print("Failed to get tracks from JSON data")
+                    completion(nil)
+                    return
+                }
+            } else {
+                print("Failed to parse the JSON data")
+                completion(nil)
+                return
             }
         }
     }

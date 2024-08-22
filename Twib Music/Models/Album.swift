@@ -31,4 +31,12 @@ class Album: Playlist {
         self.popularity = popularity
         super.init(name: name, tracks_url: tracks_url, image_url: image_url)
     }
+    
+    func getQuery(_ songs: [Song]) -> String {
+        var query: String = ""
+        for song in songs {
+            query += "\(song.sID),"
+        }
+        return query
+    }
 }

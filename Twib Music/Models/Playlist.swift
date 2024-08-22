@@ -35,10 +35,25 @@ class Playlist: Identifiable, ObservableObject {
         self.visible = -1
     }
     
-    func addTracks(_ tracks: [Song]) {
-        DispatchQueue.main.async {
-            self.tracks.append(contentsOf: tracks)
-            self.syncDownloadStatus()
+    func addTracks(_ songs: [Song]) {
+        func asyncAddTracks(_ songs: [Song]) {
+            DispatchQueue.main.async {
+                self.tracks.append(contentsOf: songs)
+                self.syncDownloadStatus()
+            }
+        }
+        
+        if let album = self as? Twib_Music.Album {
+            let query = album.getQuery(songs)
+            let url = "https://api.spotify.com/v1/tracks?ids=\(query)"
+            SpotifyAPI.add_isrc(songs, url: url) { results in
+                if let songs = results {
+                    asyncAddTracks(songs)
+                }
+            }
+        }
+        else {
+            asyncAddTracks(songs)
         }
     }
     
