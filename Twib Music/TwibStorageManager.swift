@@ -8,6 +8,7 @@
 import Foundation
 
 var StorageManager = TwibStorageManager()
+let reset: Bool = false
 
 class TwibStorageManager {
     let manager = FileManager.default
@@ -33,9 +34,11 @@ class TwibStorageManager {
             try manager.createDirectory(at: zipsDirectoryURL, withIntermediateDirectories: true)
             try manager.createDirectory(at: songsDirectoryURL, withIntermediateDirectories: true)
             
-            // Clear existing contents
-            try clearDirectory(at: zipsDirectoryURL)
-            try clearDirectory(at: songsDirectoryURL)
+            if reset {
+                // Clear existing contents
+                try clearDirectory(at: zipsDirectoryURL)
+                try clearDirectory(at: songsDirectoryURL)
+            }
         }
         catch {
             print(error.localizedDescription)
