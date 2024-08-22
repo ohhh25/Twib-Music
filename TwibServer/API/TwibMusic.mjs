@@ -12,6 +12,14 @@ const router = express.Router();
 router.use(apiLogger);
 router.use(express.json());
 
+const chunkArray = (array, size) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+};
+
 // Search for a song and return its URL and file path
 const search = async (song) => {
   const { isrc, sID, title, artist } = song;    // extract song metadata
@@ -49,12 +57,20 @@ const singleDownload = async (song, zipStream) => {
 
 router.post("/", async (req, res) => {
   const { metadata } = req.body;    // extract metadata from request body
+  const batchSize = 10;    // number of songs to download in each batch
+
   try {
     const zipStream = archiver('zip', { zlib: { level: 9 } });
     res.attachment('songs.zip');
     zipStream.pipe(res);    // pipe zip stream to response
 
-    await Promise.all(metadata.map(song => singleDownload(song, zipStream)));
+    const batches = chunkArray(metadata, batchSize);
+
+    for (const batch of batches) {
+      const downloadPromises = batch.map(song => singleDownload(song, zipStream));
+      await Promise.all(downloadPromises);    // wait for all downloads to complete
+    }
+
     console.log("Request processed successfully");
     zipStream.finalize();    // finalize zip stream
   }
