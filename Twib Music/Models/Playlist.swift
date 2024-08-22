@@ -19,6 +19,7 @@ class Playlist: Identifiable, ObservableObject {
     var downloadStatus = "Not Downloaded"
     @Published var downloadStatusIcon = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
     
+    // MARK: BASIC INIT
     init(name: String, description: String, tracks_url: String, image_url: String, visible: Int) {
         self.name = name
         self.description = description
@@ -57,22 +58,7 @@ class Playlist: Identifiable, ObservableObject {
         }
     }
     
-    func createRequestBody() {
-        self.requestBody["metadata"] = self.tracks.map { song in
-            return [
-                "isrc": song.external_ids["isrc"] as? String ?? "",
-                "sID": song.sID,
-                "name": song.name,
-                "artist": song.artist,
-                "album": song.album,
-                "other_artists": song.others,
-                "duration": song.duration,
-                "track_number": song.track_number,
-                "explicit": song.explicit
-            ]
-        }
-    }
-    
+    // MARK: DOWNLOAD STATUS
     func getStatusIcon() -> String {
         switch self.downloadStatus {
         case "Not downloaded":
@@ -106,7 +92,28 @@ class Playlist: Identifiable, ObservableObject {
         }
     }
     
+    // MARK: DOWNLOAD
+    func createRequestBody() {
+        self.requestBody["metadata"] = self.tracks.map { song in
+            return [
+                "isrc": song.external_ids["isrc"] as? String ?? "",
+                "sID": song.sID,
+                "name": song.name,
+                "artist": song.artist,
+                "album": song.album,
+                "other_artists": song.others,
+                "duration": song.duration,
+                "track_number": song.track_number,
+                "explicit": song.explicit
+            ]
+        }
+    }
+    
     func downloadTracks() {
+        if self.downloadStatus == "complete" {
+            return
+        }
+        
         self.setDownloadStatus("in progress")
         if self.requestBody.isEmpty {
             self.createRequestBody()
