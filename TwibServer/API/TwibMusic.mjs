@@ -10,8 +10,6 @@ const router = express.Router();
 router.use(apiLogger);
 router.use(express.json());
 
-const globalQueue = [];
-let processingBatch = false;
 
 const chunkArray = (array, size) => {
   const result = [];
@@ -55,86 +53,29 @@ const singleDownload = async (song, zipStream) => {
       resolve();
     });
   });
-};
-
-// Process a batch of songs
-const processBatch = async (batch, zipStream) => {
-  try {
-    const downloadPromises = batch.map(song => singleDownload(song, zipStream));
-    await Promise.all(downloadPromises);    // wait for all downloads to complete
-    await new Promise((resolve) => setTimeout(resolve, 2000));    // wait for 2 seconds
-  } catch (err) {
-    console.error(`Error processing batch: ${err.message}`);
-    throw err;
-  }
-};
-
-// Process the global queue in an alternating fashion
-const processQueue = async () => {
-  if (processingBatch) {
-    return;
-  }
-
-  processingBatch = true;
-
-  try {
-    // Keep processing as long as there are requests in the queue
-    while (globalQueue.length) {
-      const currentRequest = globalQueue.shift();  // Get the first request
-      const { batches, zipStream } = currentRequest;
-
-      const currentBatch = batches.shift();  // Get the next batch for this request
-
-      try {
-        await processBatch(currentBatch, zipStream);  // Process this batch
-      } catch (err) {
-        console.error(`Error processing batch: ${err.message}`);
-        throw err;
-      }
-
-      // If there are more batches left, move the request to the back of the queue
-      if (batches.length) {
-        globalQueue.push(currentRequest);
-      } else {
-        // Finalize the zip stream when all batches are done
-        zipStream.finalize();
-        console.log("Request processed successfully");
-      }
-
-      // Wait a short time before processing the next batch (optional)
-      await new Promise((resolve) => setTimeout(resolve, 100));  // Add a slight delay
-    }
-  } finally {
-    processingBatch = false;  // Reset flag once all requests are processed
-  }
-};
+}
 
 router.post("/", async (req, res) => {
   const { metadata } = req.body;    // extract metadata from request body
   const batchSize = 10;    // number of songs to download in each batch
 
-  // Create a new request object
-  const request = {
-    "batches": chunkArray(metadata, batchSize),
-    "zipStream": archiver('zip', { zlib: { level: 9 } })
-  };
-
-  res.attachment(`${Date.now()}.zip`);    // set response headers
-
-  request.zipStream.on('error', (err) => {
-    console.error(`Error in zip stream: ${err.message}`);
-    res.status(500).send("Error processing zip");
-  });
-
-  request.zipStream.pipe(res);    // pipe zip stream to response
-
-  // Add the request to the global queue
-  globalQueue.push(request);
-
   try {
-    await processQueue();    // process the queue
-  } catch (err) {
-    console.error(`Error processing queue: ${err.message}`);
+    const zipStream = archiver('zip', { zlib: { level: 9 } });
+    res.attachment('songs.zip');
+    zipStream.pipe(res);    // pipe zip stream to response
+
+    const batches = chunkArray(metadata, batchSize);
+
+    for (const batch of batches) {
+      const downloadPromises = batch.map(song => singleDownload(song, zipStream));
+      await Promise.all(downloadPromises);    // wait for all downloads to complete
+    }
+
+    console.log("Request processed successfully");
+    zipStream.finalize();    // finalize zip stream
+  }
+  catch (err) {
+    console.error(`Error in POST /api/Twib-Music: ${err.message}`);
     res.status(500).send("Error processing request");
   }
 });
