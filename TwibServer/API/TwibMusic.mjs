@@ -1,6 +1,4 @@
 import express from "express";
-import fs from "fs";
-import path from "path";
 
 import yts from "yt-search";
 import ytdl from "@distube/ytdl-core";
@@ -12,7 +10,6 @@ const router = express.Router();
 router.use(apiLogger);
 router.use(express.json());
 
-const agent = ytdl.createAgent(JSON.parse(fs.readFileSync("cookies.json")));
 
 const chunkArray = (array, size) => {
   const result = [];
@@ -22,7 +19,7 @@ const chunkArray = (array, size) => {
   return result;
 };
 
-// Search for a song and return its URL and file path
+// Search for a song and return its URL
 const search = async (song) => {
   const { isrc, sID, title, artist } = song;    // extract song metadata
   const query = isrc ? isrc : `${title} ${artist}`;    // search query
@@ -32,23 +29,24 @@ const search = async (song) => {
     const { videos } = await yts(`${title}`);   // retry search with title
     if (!videos.length) {
       throw new Error(`No results found for ${title}`);
-    } return {url: videos[0].url, filePath: `./downloads/${sID}.m4a`};
+    }
+    return videos[0].url;
   }
-  return {url: videos[0].url, filePath: `./downloads/${sID}.m4a`};
-}
+  return videos[0].url;
+};
 
+// Download a single song
 const singleDownload = async (song, zipStream) => {
-  const { url, filePath } = await search(song);    // get URL and file path
-  const audioStream = ytdl(url, { quality: '140' }, { agent });    // get audio stream
-  const fileName = path.basename(filePath);
-
-  zipStream.append(audioStream, { name: fileName });   // append stream to zip
+  const url = await search(song);    // get URL
+  const audioStream = ytdl(url, { quality: '140' });    // get audio stream
 
   return new Promise((resolve, reject) => {
     audioStream.on('error', (err) => {
       console.error(`Error in audio stream: ${err.message}`);
       reject(err);
     });
+
+    zipStream.append(audioStream, { name: `${song.sID}.m4a` });   // append stream to zip
 
     audioStream.on('end', () => {
       console.log(`Downloaded ${song.name} by ${song.artist}`);
@@ -59,7 +57,7 @@ const singleDownload = async (song, zipStream) => {
 
 router.post("/", async (req, res) => {
   const { metadata } = req.body;    // extract metadata from request body
-  const batchSize = 20;    // number of songs to download in each batch
+  const batchSize = 10;    // number of songs to download in each batch
 
   try {
     const zipStream = archiver('zip', { zlib: { level: 9 } });
