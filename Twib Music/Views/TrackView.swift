@@ -28,10 +28,15 @@ struct TrackView: View {
             }
                 .padding(.leading, 24)
             Spacer()
-            Button("", systemImage: playlist.downloadStatusIcon) {
-                playlist.downloadTracks()
+            if playlist.downloadStatusIcon == "arrow.down.circle.dotted" {
+                CircularProgressView(progress: playlist.downloadProgress, icon: Image(systemName: "arrow.down"))
+                    .padding(.trailing, 6)
+            } else {
+                Button("", systemImage: playlist.downloadStatusIcon) {
+                    playlist.downloadTracks()
+                }
+                .font(.custom("Helvetica", size: 36))
             }
-            .font(.custom("Helvetica", size: 36))
             AsyncImage(url: URL(string: playlist.image_url)) { image in
                 image
                     .resizable()
@@ -63,3 +68,31 @@ struct TrackView: View {
     }
 }
 
+
+struct CircularProgressView: View {
+    var progress: Double // Progress value from 0 to 1
+    var icon: Image // Icon to display in the center
+
+    var body: some View {
+        ZStack {
+            // Background circle
+            Circle()
+                .stroke(Color.gray.opacity(0.3), lineWidth: 4)
+                .frame(width: 36, height: 36)
+
+            // Progress ring
+            Circle()
+                .trim(from: 0, to: CGFloat(progress))
+                .stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                .foregroundColor(.blue)
+                .rotationEffect(.degrees(-90))
+                .frame(width: 36, height: 36)
+
+            // Icon in the center
+            icon
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
+        }
+    }
+}
