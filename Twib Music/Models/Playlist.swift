@@ -137,9 +137,13 @@ class Playlist: Identifiable, ObservableObject {
         }
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: self.requestBody, options: .prettyPrinted)
-            TwibServerAPI.downloadPlaylist(jsonData) { success in
+            TwibServerAPI.downloadPlaylist(jsonData, expectedSize: self.expectedDownloadSize!, completion: { success in
                 success ? self.syncDownloadStatus() : self.setDownloadStatus("failed")
-            }
+            }, progress: { progress in
+                DispatchQueue.main.async {
+                    self.downloadProgress = min(progress, 1.0)
+                }
+            })
         } catch {
             print("Failed to serialize the JSON: \(error.localizedDescription)")
             syncDownloadStatus()
