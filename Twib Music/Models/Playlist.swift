@@ -18,6 +18,8 @@ class Playlist: Identifiable, ObservableObject {
     var requestBody: [String: Any] = [:]
     var downloadStatus = "Not Downloaded"
     @Published var downloadStatusIcon = "exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
+    @Published var downloadProgress: Double = 0
+    private var expectedDownloadSize: Int64?
     
     // MARK: BASIC INIT
     init(name: String, description: String, tracks_url: String, image_url: String, visible: Int) {
@@ -80,16 +82,28 @@ class Playlist: Identifiable, ObservableObject {
     }
     
     func syncDownloadStatus() {
+        let addToExpectedDownloadSize = (self.expectedDownloadSize == nil)
+        var total_ms_duration = 0
         DispatchQueue.main.async {
             var allDownloaded = true
             for track in self.tracks {
                 track.syncDownloadStatus()
+                total_ms_duration += addToExpectedDownloadSize ? track.duration : 0
                 if !track.isDownloaded {
                     allDownloaded = false
                 }
             }
             self.setDownloadStatus(allDownloaded ? "complete" : "Not downloaded")
+            if addToExpectedDownloadSize {
+                self.setExpectedDownloadSize(total_ms_duration)
+            }
         }
+    }
+    
+    func setExpectedDownloadSize(_ durationMs: Int) {
+        let btyesPerSecond = 16000.0 // 16,000 bytes (16 KB)
+        let durationSeconds = Double(durationMs) / 1000.0
+        self.expectedDownloadSize = Int64(durationSeconds * btyesPerSecond)
     }
     
     // MARK: DOWNLOAD
@@ -114,7 +128,10 @@ class Playlist: Identifiable, ObservableObject {
             return
         }
         
-        self.setDownloadStatus("in progress")
+        DispatchQueue.main.async {
+            self.downloadProgress = 0.0
+            self.setDownloadStatus("in progress")
+        }
         if self.requestBody.isEmpty {
             self.createRequestBody()
         }
