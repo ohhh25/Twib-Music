@@ -35,7 +35,20 @@ struct HomeView: View {
                 Spacer()
             }
             else {
-                LibraryView()
+                TabView {
+                    LibraryView().tabItem {
+                        Label("Home", systemImage: "house.fill")
+                    }.tag(1)
+                    PlayingView().tabItem {
+                        Label("Playing", systemImage: "waveform")
+                    }.tag(2)
+                    QueueView().tabItem {
+                        Label("Queue", systemImage: "music.note.list")
+                    }.tag(3)
+                    SettingsView().tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
+                }
             }
         }
         .background(AngularGradient(colors: grad, center: UnitPoint(x: 0.5, y: 0.4)))
