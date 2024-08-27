@@ -61,8 +61,8 @@ struct PlayingView: View {
                     print("Previous Button Pressed")
                 }
                 Spacer()
-                Button("", systemImage: "play.circle.fill") {
-                    print("Play Button Pressed")
+                Button("", systemImage: audioManager.playing ? "pause.circle.fill" : "play.circle.fill") {
+                    audioManager.togglePlayback()
                 }
                 .font(.custom("Helvetica", size: 72))
                 Spacer()
