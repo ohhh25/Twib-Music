@@ -10,25 +10,32 @@ import SwiftUI
 fileprivate let topColor = Color(red:(118.0 / 255.0), green:(214.0 / 255.0), blue:(255.0 / 255.0))
 fileprivate let botColor = Color(red:(255.0 / 255.0), green:(252.0 / 255.0), blue:(121.0 / 255.0))
 fileprivate let grad = [topColor, botColor, topColor]
-var playing: Bool = true
 
 struct PlayingView: View {
+    @StateObject private var audioManager = AudioManager
+
     var body: some View {
         VStack {
-            Text(playing ? "Playing Song" : "No music playing")
+            Text(audioManager.isSong ? "Playing Song" : "No music playing")
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
-            Image("none")
-                .resizable()
+            AsyncImage(url: URL(string: audioManager.currentSong.image_url)) { image in
+                image.resizable()
                 .scaledToFit()
                 .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
-            Text(playing ? "Suburban Legends (Taylor's Version) (From The Vault)": "[Song Title]")
+            } placeholder: {
+                Image("none")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+            }
+            Text(audioManager.currentSong.name)
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.bold)
                 .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(height: 72, alignment: .topLeading)
-            Text(playing ? "Taylor Swift" : "[Artist Name]")
+            Text(audioManager.currentSong.artist)
                 .font(.custom("Helvetica", size: 18))
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,10 +43,10 @@ struct PlayingView: View {
                 .progressViewStyle(.linear)
                 .padding(EdgeInsets(top: 24, leading: 0, bottom: 6, trailing: 0))
             HStack {
-                Text(playing ? "0:00" :"--:--")
+                Text(audioManager.isSong ? "0:00" :"--:--")
                     .font(.custom("Helvetica", size: 16))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(playing ? "2:52" :"--:--")
+                Text(audioManager.isSong ? "2:52" :"--:--")
                     .font(.custom("Helvetica", size: 16))
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
