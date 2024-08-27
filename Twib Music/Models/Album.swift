@@ -35,6 +35,7 @@ class Album: Playlist {
     func getQuery(_ songs: [Song]) -> String {
         var query: String = ""
         for song in songs {
+            song.image_url = image_url
             query += "\(song.sID),"
         }
         return query

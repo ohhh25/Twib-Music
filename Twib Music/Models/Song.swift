@@ -12,7 +12,7 @@ class Song: Identifiable, ObservableObject {
     let artist: String
     var others: [String] = []
     let album: String
-    let image_url: String
+    var image_url: String
     let track_number: Int
     let duration: Int
     
