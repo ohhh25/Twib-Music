@@ -55,16 +55,7 @@ struct ItemView: View {
 
 
 func playSong(_ track: Song) {
-    do {
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playback, mode: .default)
-    } catch {
-        print("Failed to configure AVAudioSession: \(error.localizedDescription)")
-    }
     if track.isDownloaded {
-        DispatchQueue.main.async {
-            player = AVPlayer(url: track.location)
-            player?.play()
-        }
+        AudioManager.play(track: track)
     }
 }

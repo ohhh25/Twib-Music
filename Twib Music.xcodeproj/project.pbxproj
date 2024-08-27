@@ -12,6 +12,7 @@
 		F43F2E5A2C74262D002C1CD6 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = F43F2E592C74262D002C1CD6 /* Zip */; };
 		F441B22E2C6563BB006F2118 /* HeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441B22D2C6563BB006F2118 /* HeadingView.swift */; };
 		F44B796D2C7137F90064F471 /* TwibServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B796C2C7137F90064F471 /* TwibServerAPI.swift */; };
+		F45199BD2C7E483300C9CD93 /* TwibAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45199BC2C7E483300C9CD93 /* TwibAudioManager.swift */; };
 		F45661662C7CF372008A1B20 /* PlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45661652C7CF372008A1B20 /* PlayingView.swift */; };
 		F45661692C7D004B008A1B20 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45661682C7D004B008A1B20 /* QueueView.swift */; };
 		F45B9E902C6AC1B500BE0B84 /* MyYouTubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B9E8F2C6AC1B500BE0B84 /* MyYouTubeAPI.swift */; };
@@ -40,6 +41,7 @@
 		F43F2E562C740310002C1CD6 /* TwibStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwibStorageManager.swift; sourceTree = "<group>"; };
 		F441B22D2C6563BB006F2118 /* HeadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingView.swift; sourceTree = "<group>"; };
 		F44B796C2C7137F90064F471 /* TwibServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwibServerAPI.swift; sourceTree = "<group>"; };
+		F45199BC2C7E483300C9CD93 /* TwibAudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwibAudioManager.swift; sourceTree = "<group>"; };
 		F45661652C7CF372008A1B20 /* PlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingView.swift; sourceTree = "<group>"; };
 		F45661682C7D004B008A1B20 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		F45B9E8F2C6AC1B500BE0B84 /* MyYouTubeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyYouTubeAPI.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				F4B7B4CE2C35235900A348D3 /* Assets.xcassets */,
 				F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */,
 				F43F2E562C740310002C1CD6 /* TwibStorageManager.swift */,
+				F45199BC2C7E483300C9CD93 /* TwibAudioManager.swift */,
 				F48DBF452C61520E00FF8D9F /* Networking */,
 				F48DBF472C61524700FF8D9F /* Models */,
 				F48DBF482C61586800FF8D9F /* Views */,
@@ -253,6 +256,7 @@
 				F4B7B4CB2C35235800A348D3 /* Twib_MusicApp.swift in Sources */,
 				F4EB28E42C37A5A5003406EC /* HomeView.swift in Sources */,
 				F44B796D2C7137F90064F471 /* TwibServerAPI.swift in Sources */,
+				F45199BD2C7E483300C9CD93 /* TwibAudioManager.swift in Sources */,
 				F45DD0772C7D095A00DCF6A9 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
