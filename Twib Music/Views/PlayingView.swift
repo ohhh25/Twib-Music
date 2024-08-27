@@ -76,6 +76,7 @@ struct PlayingView: View {
                 .font(.custom("Helvetica", size: 24))
             }
             .font(.custom("Helvetica", size: 36))
+            .disabled(!audioManager.isSong)
             Spacer()
         }
         .padding(EdgeInsets(top: 12, leading: 24, bottom: 0, trailing: 24))
