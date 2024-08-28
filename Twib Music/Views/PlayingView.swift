@@ -16,9 +16,12 @@ struct PlayingView: View {
 
     var body: some View {
         VStack {
+            // MARK: Heading Message
             Text(audioManager.isSong ? "Playing Song" : "No music playing")
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
+            
+            // MARK: Song Image
             AsyncImage(url: URL(string: audioManager.currentSong.image_url)) { image in
                 image.resizable()
                 .scaledToFit()
@@ -29,6 +32,8 @@ struct PlayingView: View {
                     .scaledToFit()
                     .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
             }
+            
+            // MARK: Metadata
             Text(audioManager.currentSong.name)
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.bold)
@@ -39,18 +44,22 @@ struct PlayingView: View {
                 .font(.custom("Helvetica", size: 18))
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            ProgressView()
-                .progressViewStyle(.linear)
+            
+            // MARK: Playback Progress
+            Slider(value: $audioManager.progress, in: 0...1)
                 .padding(EdgeInsets(top: 24, leading: 0, bottom: 6, trailing: 0))
+                .disabled(true)
             HStack {
-                Text(audioManager.isSong ? "0:00" :"--:--")
+                Text(audioManager.isSong ? timeFormatter(Int(audioManager.elapsedTime)) : "--:--")
                     .font(.custom("Helvetica", size: 16))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(audioManager.isSong ? "2:52" :"--:--")
+                Text(audioManager.isSong ? timeFormatter(audioManager.currentSong.duration / 1000) : "--:--")
                     .font(.custom("Helvetica", size: 16))
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .padding(.bottom, 24)
+            
+            // MARK: Playback controls
             HStack {
                 Button("", systemImage: "shuffle") {
                     print("Shuffle Button Pressed")
@@ -61,7 +70,7 @@ struct PlayingView: View {
                     print("Previous Button Pressed")
                 }
                 Spacer()
-                Button("", systemImage: audioManager.playing ? "pause.circle.fill" : "play.circle.fill") {
+                Button("", systemImage: audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill") {
                     audioManager.togglePlayback()
                 }
                 .font(.custom("Helvetica", size: 72))
@@ -77,6 +86,7 @@ struct PlayingView: View {
             }
             .font(.custom("Helvetica", size: 36))
             .disabled(!audioManager.isSong)
+            
             Spacer()
         }
         .padding(EdgeInsets(top: 12, leading: 24, bottom: 0, trailing: 24))
@@ -86,4 +96,15 @@ struct PlayingView: View {
 
 #Preview {
     PlayingView()
+}
+
+func timeFormatter(_ seconds: Int) -> String {
+    let formatter = DateComponentsFormatter()
+    formatter.zeroFormattingBehavior = .pad
+    formatter.allowedUnits = [.minute, .second]
+    
+    if let time = formatter.string(from: TimeInterval(seconds)) {
+        return time
+    }
+    return "--:--"
 }
