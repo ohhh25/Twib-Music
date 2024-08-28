@@ -56,6 +56,6 @@ struct ItemView: View {
 
 func playSong(_ track: Song) {
     if track.isDownloaded {
-        AudioManager.play(track: track)
+        AudioManager.playNew(track: track)
     }
 }

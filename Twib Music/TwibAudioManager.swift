@@ -19,7 +19,6 @@ fileprivate let noSong = Song(name: "[Song Name]",
 
 class TwibAudioManager: ObservableObject {
     private let audioSession = AVAudioSession.sharedInstance()
-    @Published var playing: Bool = false
     private var player: AVPlayer?
     private var playerObserver: Any?
     @Published var isPlaying: Bool = false
@@ -43,7 +42,7 @@ class TwibAudioManager: ObservableObject {
         self.currentSong = track
     }
     
-    func play(track: Song) {
+    func playNew(track: Song) {
         DispatchQueue.main.async {
             if let observer = self.playerObserver {
                 self.player?.removeTimeObserver(observer)
@@ -65,18 +64,19 @@ class TwibAudioManager: ObservableObject {
                 }
             }
             self.player?.play()
-            self.playing = true
+            self.isPlaying = true
+            self.updateNowPlayingInfo()
         }
     }
     
     func togglePlayback() {
         DispatchQueue.main.async {
-            if self.playing {
-                self.player?.pause()
-                self.playing = false
-            } else {
-                self.player?.play()
-                self.playing = true
+            self.isPlaying ? self.player?.pause() : self.player?.play()
+            self.isPlaying.toggle()
+            self.updateNowPlayingInfo()
+        }
+    }
+    
     // MARK: REMOTE CONTROLS
     func setupRemoteTransportControls() {
         let controlCenter = MPRemoteCommandCenter.shared()
