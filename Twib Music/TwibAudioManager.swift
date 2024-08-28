@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MediaPlayer
 import AVFoundation
 
 var AudioManager = TwibAudioManager()
@@ -33,6 +34,7 @@ class TwibAudioManager: ObservableObject {
         } catch {
             print("Failed to configure AVAudioSession: \(error.localizedDescription)")
         }
+        setupRemoteTransportControls()
     }
     
     // MARK: BASIC FUNCTIONALITY
@@ -75,7 +77,63 @@ class TwibAudioManager: ObservableObject {
             } else {
                 self.player?.play()
                 self.playing = true
+    // MARK: REMOTE CONTROLS
+    func setupRemoteTransportControls() {
+        let controlCenter = MPRemoteCommandCenter.shared()
+        
+        controlCenter.playCommand.addTarget { event in
+            self.togglePlayback()
+            return .success
+        }
+        
+        controlCenter.pauseCommand.addTarget { event in
+            self.togglePlayback()
+            return .success
+        }
+    }
+    
+    func updateNowPlayingInfo() {
+        var nowPlayingInfo = getBasicInfo()
+
+        guard let imageURL = URL(string: currentSong.image_url) else { return }
+        fetchImage(imageURL) { image in
+            if let image = image {
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { size in
+                    return image
+                }
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
             }
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        }
+    }
+    
+    // MARK: HELPER FUNCTIONS
+    private func getBasicInfo() -> [String: Any] {
+        var info: [String: Any] = [:]
+        info[MPMediaItemPropertyTitle] = currentSong.name
+        info[MPMediaItemPropertyArtist] = currentSong.artist
+        info[MPMediaItemPropertyPlaybackDuration] = currentSong.duration / 1000
+        info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player?.currentTime().seconds
+        return info
+    }
+    
+    private func fetchImage(_ url: URL, completion: @escaping (UIImage?) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil, let image = UIImage(data: data) else {
+                completion(nil)
+                return
+            }
+            DispatchQueue.main.async {
+                completion(image)
+                return
+            }
+        }
+        task.resume()
+    }
+    
+    deinit {
+        if let observer = playerObserver {
+            player?.removeTimeObserver(observer)
         }
     }
 }
