@@ -60,6 +60,9 @@ class TwibAudioManager: ObservableObject {
                         self?.isSong = false
                         self?.elapsedTime = 0
                         self?.progress = 0
+                        if QueueManager.songQueue.isEmpty == false {
+                            self?.playNew(track: QueueManager.getNextSong())
+                        }
                     }
                 }
             }
