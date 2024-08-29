@@ -12,14 +12,21 @@ struct TrackView: View {
     @StateObject var playlist: Playlist
     @State var isPlaying = false
     @State var downloadImage = "arrow.down.circle"
+    @State var addedToQueue = false
     
     var body: some View {
         // MARK: JUST HEADING
         HStack(alignment: .bottom) {
             VStack(alignment: .leading) {
                 Button("", systemImage: isPlaying ? "pause.circle" : "play.circle") {
+                    if (!isPlaying && !addedToQueue) {
+                        QueueManager.addPlaylistToQueue(playlist.tracks, sID: playlist.sID)
+                        addedToQueue = true
+                    } else {
+                        AudioManager.togglePlayback()
+                    }
                     isPlaying.toggle()
-                }
+                }.disabled(playlist.downloadStatus != "complete")
                 .font(.custom("Helvetica", size: 48))
                 Text("\(playlist.tracks.count) songs")
                     .font(.custom("Helvetica", size: 12))
@@ -63,6 +70,11 @@ struct TrackView: View {
             let url = playlist is Twib_Music.Album ? playlist.tracks_url : playlist.tracks_url + "?limit=50"
             if playlist.tracks.isEmpty {
                 SpotifyAPI.fetchTracks(playlist, url: url)
+            }
+            if QueueManager.getPlaylistUniqueID() == playlist.sID {
+                self.isPlaying = AudioManager.isPlaying
+            } else {
+                addedToQueue = false
             }
         }
     }
