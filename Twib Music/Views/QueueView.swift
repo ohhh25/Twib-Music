@@ -11,12 +11,38 @@ import UIKit
 let gradientImage: UIImage? = createGradientImage(size: CGSize(width: 600, height: 1000))
 
 struct QueueView: View {
+    @StateObject private var queueManager = QueueManager
     var body: some View {
         VStack {
-            Text("Queue is Empty")
+            Text(queueManager.songQueue.isEmpty ? "Queue is Empty" : "Queue")
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
-                .padding(.top, 12)
+                .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+            if !queueManager.songQueue.isEmpty {
+                Divider()
+                List(Array(queueManager.songQueue.enumerated()), id: \.offset) { idx, song in
+                    VStack(alignment: .leading) {
+                        Text(song.name)
+                            .font(.custom("Helvetica", size: 16))
+                            .padding(.bottom, 2)
+                            .lineLimit(1)
+                        Text(song.artist)
+                            .font(.custom("Helvetica", size: 12))
+                            .fontWeight(.light)
+                            .lineLimit(1)
+                    }
+                    .listRowBackground(Color.clear)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            queueManager.removeFromQueue(idx)
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .padding(EdgeInsets(top: 0, leading: 12, bottom: 12, trailing: 36))
+            }
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
