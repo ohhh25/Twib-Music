@@ -41,6 +41,9 @@ struct ItemView: View {
                     Button("Play", systemImage: "play.fill", action: {
                         playSong(track)
                     })
+                    Button("Add to Queue", systemImage: "waveform.path.badge.plus", action: {
+                        QueueManager.addToQueue(track)
+                    })
                 } else {
                     Text(isAlbum ? "Download Album First" : "Download Playlist First")
                 }
