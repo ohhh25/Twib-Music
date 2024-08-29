@@ -18,7 +18,8 @@ class Album: Playlist {
     
     init(name: String, tracks_url: String, image_url: String,
          artists: [[String: Any]], type: String, total_tracks: Int,
-         release_date: String, external_ids: [String: Any], popularity: Int) {
+         release_date: String, external_ids: [String: Any], popularity: Int,
+         sID: String) {
         // first subclass init
         self.artist = (artists[0]["name"] as? String) ?? ""
         for artist in artists[1...] {
@@ -29,7 +30,7 @@ class Album: Playlist {
         self.release_date = release_date
         self.external_ids = external_ids
         self.popularity = popularity
-        super.init(name: name, tracks_url: tracks_url, image_url: image_url)
+        super.init(name: name, tracks_url: tracks_url, image_url: image_url, sID: sID)
     }
     
     func getQuery(_ songs: [Song]) -> String {

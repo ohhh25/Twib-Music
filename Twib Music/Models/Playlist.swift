@@ -13,6 +13,7 @@ class Playlist: Identifiable, ObservableObject {
     let tracks_url: String
     let image_url: String
     let visible: Int
+    let sID: String
     @Published var tracks: [Song] = []
 
     var requestBody: [String: Any] = [:]
@@ -22,20 +23,22 @@ class Playlist: Identifiable, ObservableObject {
     private var expectedDownloadSize: Int64?
     
     // MARK: BASIC INIT
-    init(name: String, description: String, tracks_url: String, image_url: String, visible: Int) {
+    init(name: String, description: String, tracks_url: String, image_url: String, visible: Int, sID: String) {
         self.name = name
         self.description = description
         self.tracks_url = tracks_url
         self.image_url = image_url
         self.visible = visible
+        self.sID = sID
     }
     
-    init(name: String, tracks_url: String, image_url: String) {
+    init(name: String, tracks_url: String, image_url: String, sID: String) {
         self.name = name
         self.tracks_url = tracks_url
         self.image_url = image_url
         self.description = ""
         self.visible = -1
+        self.sID = sID
     }
     
     func addTracks(_ songs: [Song]) {

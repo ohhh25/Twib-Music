@@ -22,7 +22,7 @@ class MySpotifyAPI: ObservableObject {
         self.playlists = [Playlist(name: "Liked Songs", description: "",
                                    tracks_url: "https://api.spotify.com/v1/me/tracks",
                                    image_url: "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/saved.imageset/saved.png",
-                                   visible: -1)]
+                                   visible: -1, sID: "THE_GREATEST_TWIB")]
         self.albums = []
     }
     
@@ -92,14 +92,16 @@ class MySpotifyAPI: ObservableObject {
                 let tracks = playlist["tracks"] as? [String: Any],
                 let tracks_url = tracks["href"] as? String,
                 let images = playlist["images"] as? [[String: Any]],
-                let image_url = images.first?["url"] as? String
+                let image_url = images.first?["url"] as? String,
+                // unique
+                let sID = playlist["id"] as? String
             else {
                 return nil
             }
             let visible = (playlist["public"] as? Int) ?? -1
             return Playlist(name: name, description: description,
                             tracks_url: tracks_url, image_url: image_url,
-                            visible: visible)
+                            visible: visible, sID: sID)
         }
         return parsedPlaylists
     }
@@ -151,14 +153,16 @@ class MySpotifyAPI: ObservableObject {
                 let total_tracks = album["total_tracks"] as? Int,
                 let release_date = album["release_date"] as? String,
                 let external_ids = album["external_ids"] as? [String: Any],
-                let popularity = album["popularity"] as? Int
+                let popularity = album["popularity"] as? Int,
+                // unique
+                let sID = album["id"] as? String
             else {
                 return nil
             }
             return Album(name: name, tracks_url: tracks_url, image_url: image_url,
                          artists: artists, type: type, total_tracks: total_tracks,
                          release_date: release_date, external_ids: external_ids,
-                         popularity: popularity)
+                         popularity: popularity, sID: sID)
         }
         return parsedAlbums
     }
