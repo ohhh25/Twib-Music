@@ -15,6 +15,9 @@ class TwibQueueManager: ObservableObject {
     private var sID = ""
     
     func addToQueue(_ song: Song) {
+        if song.image_url == "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/none.imageset/none.png" {
+            return
+        }
         DispatchQueue.main.async {
             if !AudioManager.isSong {
                 AudioManager.playNew(track: song)
@@ -46,6 +49,9 @@ class TwibQueueManager: ObservableObject {
     }
     
     func addPreviousSong(_ song: Song) {
+        if song.image_url == "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/none.imageset/none.png" {
+            return
+        }
         DispatchQueue.main.async {
             self.maintainPreviousSongs()
             self.previousSongs.append(song)
@@ -59,6 +65,9 @@ class TwibQueueManager: ObservableObject {
     func getPreviousSong(currentSong: Song?) -> Song {
         DispatchQueue.main.async {
             if let currentSong = currentSong {
+                if currentSong.image_url == "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/none.imageset/none.png" {
+                    return
+                }
                 self.songQueue.insert(currentSong, at: 0)
             }
         }
