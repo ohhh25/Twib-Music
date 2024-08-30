@@ -76,7 +76,7 @@ struct PlayingView: View {
                 .font(.custom("Helvetica", size: 72))
                 Spacer()
                 Button("", systemImage: "forward.end.fill") {
-                    print("Next Button Pressed")
+                    audioManager.skipToNextSong()
                 }
                 Spacer()
                 Button("", systemImage: "repeat") {
