@@ -11,6 +11,7 @@ var QueueManager = TwibQueueManager()
 
 class TwibQueueManager: ObservableObject {
     @Published var songQueue: [Song] = []
+    @Published var previousSongs: [Song] = []
     private var sID = ""
     
     func addToQueue(_ song: Song) {
@@ -36,8 +37,32 @@ class TwibQueueManager: ObservableObject {
         return self.sID
     }
     
+    private func maintainPreviousSongs() {
+        DispatchQueue.main.async {
+            while self.previousSongs.count >= 20 {
+                self.previousSongs.removeFirst()
+            }
+        }
+    }
+    
+    func addPreviousSong(_ song: Song) {
+        DispatchQueue.main.async {
+            self.maintainPreviousSongs()
+            self.previousSongs.append(song)
+        }
+    }
+    
     func getNextSong() -> Song {
         return self.songQueue.removeFirst()
+    }
+    
+    func getPreviousSong(currentSong: Song?) -> Song {
+        DispatchQueue.main.async {
+            if let currentSong = currentSong {
+                self.songQueue.insert(currentSong, at: 0)
+            }
+        }
+        return self.previousSongs.removeLast()
     }
     
     func removeFromQueue(_ location: Int) {
