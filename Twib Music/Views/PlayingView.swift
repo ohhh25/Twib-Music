@@ -13,6 +13,7 @@ fileprivate let grad = [topColor, botColor, topColor]
 
 struct PlayingView: View {
     @StateObject private var audioManager = AudioManager
+    @ObservedObject private var queueManager = QueueManager
 
     var body: some View {
         VStack {
@@ -65,27 +66,31 @@ struct PlayingView: View {
                     print("Shuffle Button Pressed")
                 }
                 .font(.custom("Helvetica", size: 24))
+                .disabled(!audioManager.isSong)
                 Spacer()
                 Button("", systemImage: "backward.end.fill") {
                     audioManager.backToPreviousSong()
                 }
+                .disabled(queueManager.previousSongs.isEmpty && !audioManager.isSong)
                 Spacer()
                 Button("", systemImage: audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill") {
                     audioManager.togglePlayback()
                 }
                 .font(.custom("Helvetica", size: 72))
+                .disabled(!audioManager.isSong)
                 Spacer()
                 Button("", systemImage: "forward.end.fill") {
                     audioManager.skipToNextSong()
                 }
+                .disabled(!audioManager.isSong)
                 Spacer()
                 Button("", systemImage: "repeat") {
                     print("Repeat Button Pressed")
                 }
                 .font(.custom("Helvetica", size: 24))
+                .disabled(!audioManager.isSong)
             }
             .font(.custom("Helvetica", size: 36))
-            .disabled(!audioManager.isSong)
             
             Spacer()
         }
