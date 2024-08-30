@@ -80,6 +80,21 @@ class TwibAudioManager: ObservableObject {
         }
     }
     
+    func skipToNextSong() {
+        DispatchQueue.main.async {
+            if !QueueManager.songQueue.isEmpty {
+                self.playNew(track: QueueManager.getNextSong())
+            } else {
+                self.player?.pause()
+                self.isPlaying = false
+                self.currentSong = noSong
+                self.isSong = false
+                self.elapsedTime = 0
+                self.progress = 0
+            }
+        }
+    }
+    
     // MARK: REMOTE CONTROLS
     func setupRemoteTransportControls() {
         let controlCenter = MPRemoteCommandCenter.shared()
