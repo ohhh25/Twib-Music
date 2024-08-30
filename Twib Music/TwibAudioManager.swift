@@ -108,6 +108,11 @@ class TwibAudioManager: ObservableObject {
             self.togglePlayback()
             return .success
         }
+        
+        controlCenter.nextTrackCommand.addTarget { event in
+            self.skipToNextSong()
+            return .success
+        }
     }
     
     func updateNowPlayingInfo() {
