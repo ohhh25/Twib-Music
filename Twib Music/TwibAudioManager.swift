@@ -42,10 +42,15 @@ class TwibAudioManager: ObservableObject {
         self.currentSong = track
     }
     
-    func playNew(track: Song) {
+    func playNew(track: Song, sameSong: Bool = false, previous: Bool = false) {
         DispatchQueue.main.async {
             if let observer = self.playerObserver {
                 self.player?.removeTimeObserver(observer)
+            }
+            if self.isSong {
+                if ((!sameSong) && (!previous)) {
+                    QueueManager.addPreviousSong(self.currentSong)
+                }
             }
             self.setCurrentSong(track: track)
             self.player = AVPlayer(url: self.currentSong.location)
@@ -61,6 +66,7 @@ class TwibAudioManager: ObservableObject {
                         self?.elapsedTime = 0
                         self?.progress = 0
                         if QueueManager.songQueue.isEmpty == false {
+                            QueueManager.addPreviousSong(self!.currentSong)
                             self?.playNew(track: QueueManager.getNextSong())
                         }
                     }
@@ -85,12 +91,25 @@ class TwibAudioManager: ObservableObject {
             if !QueueManager.songQueue.isEmpty {
                 self.playNew(track: QueueManager.getNextSong())
             } else {
+                QueueManager.addPreviousSong(self.currentSong)
                 self.player?.pause()
                 self.isPlaying = false
                 self.currentSong = noSong
                 self.isSong = false
                 self.elapsedTime = 0
                 self.progress = 0
+            }
+        }
+    }
+    
+    func backToPreviousSong() {
+        DispatchQueue.main.async {
+            if self.elapsedTime > 2 {
+                self.playNew(track: self.currentSong, sameSong: true)
+            } else {
+                if !QueueManager.previousSongs.isEmpty {
+                    self.playNew(track: QueueManager.getPreviousSong(currentSong: self.currentSong), previous: true)
+                }
             }
         }
     }
