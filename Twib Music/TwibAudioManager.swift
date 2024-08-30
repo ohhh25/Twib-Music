@@ -55,20 +55,20 @@ class TwibAudioManager: ObservableObject {
             self.setCurrentSong(track: track)
             self.player = AVPlayer(url: self.currentSong.location)
             self.playerObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 1000), queue: .main) { [weak self] time in
-                self?.elapsedTime = time.seconds
-                if let ms_duration = self?.currentSong.duration {
-                    self?.progress = Float(time.seconds) / Float(ms_duration / 1000)
-                    if Int(time.seconds) >= (ms_duration / 1000) {
-                        self?.player?.pause()
-                        self?.isPlaying = false
-                        self?.currentSong = noSong
-                        self?.isSong = false
-                        self?.elapsedTime = 0
-                        self?.progress = 0
-                        if QueueManager.songQueue.isEmpty == false {
-                            QueueManager.addPreviousSong(self!.currentSong)
-                            self?.playNew(track: QueueManager.getNextSong())
-                        }
+                guard let self = self else { return }
+                self.elapsedTime = time.seconds
+                let ms_duration = self.currentSong.duration
+                self.progress = Float(time.seconds) / Float(ms_duration / 1000)
+                if Int(time.seconds) >= (ms_duration / 1000) {
+                    QueueManager.addPreviousSong(self.currentSong)
+                    self.player?.pause()
+                    self.isPlaying = false
+                    self.currentSong = noSong
+                    self.isSong = false
+                    self.elapsedTime = 0
+                    self.progress = 0
+                    if !QueueManager.songQueue.isEmpty {
+                        self.playNew(track: QueueManager.getNextSong())
                     }
                 }
             }
