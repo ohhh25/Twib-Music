@@ -26,6 +26,7 @@ class Song: Identifiable, ObservableObject {
     
     let location: URL
     @Published var isDownloaded = false
+    var twibIdx: Int = -1
     
     init(name: String, artists: [[String: Any]],
          album: [String: Any], track_number: Int,
