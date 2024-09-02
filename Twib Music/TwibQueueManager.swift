@@ -55,8 +55,19 @@ class TwibQueueManager: ObservableObject {
         DispatchQueue.main.async {
             if !AudioManager.isSong {
                 AudioManager.playNew(track: song)
+                if (self.repeatStatus.count > 0 && self.sID.isEmpty) {
+                    self.repeatQueue.removeAll()
+                    self.repeatQueue.append(song)
+                }
             } else {
-                self.songQueue.append(song)
+                if !self.sID.isEmpty {
+                    self.songQueue.insert(song, at: 0)
+                } else {
+                    self.songQueue.append(song)
+                    if self.repeatStatus.count > 0 {
+                        self.repeatQueue.append(song)
+                    }
+                }
             }
         }
     }
