@@ -76,7 +76,10 @@ class TwibQueueManager: ObservableObject {
         }
     }
     
-    func getPlaylistUniqueID() -> String {
+    func getPlaylistUniqueID(remove: Bool = false) -> String {
+        if remove {
+            self.sID = ""
+        }
         return self.sID
     }
     

@@ -83,10 +83,11 @@ struct TrackView: View {
                 SpotifyAPI.fetchTracks(playlist, url: url)
             }
             if QueueManager.getPlaylistUniqueID() == playlist.sID {
-                self.isPlaying = AudioManager.isPlaying
+                isPlaying = AudioManager.isPlaying
                 playlist.shuffle = QueueManager.shuffleMode
             } else {
                 addedToQueue = false
+                isPlaying = false
             }
         }
     }

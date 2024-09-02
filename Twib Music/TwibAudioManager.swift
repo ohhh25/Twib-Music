@@ -72,6 +72,8 @@ class TwibAudioManager: ObservableObject {
                     }
                     if !QueueManager.songQueue.isEmpty {
                         self.playNew(track: QueueManager.getNextSong())
+                    } else {
+                        _ = QueueManager.getPlaylistUniqueID(remove: true)
                     }
                 }
             }
@@ -104,6 +106,7 @@ class TwibAudioManager: ObservableObject {
                 self.isSong = false
                 self.elapsedTime = 0
                 self.progress = 0
+                _ = QueueManager.getPlaylistUniqueID(remove: true)
             }
         }
     }
