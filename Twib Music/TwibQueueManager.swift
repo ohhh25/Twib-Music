@@ -14,6 +14,21 @@ class TwibQueueManager: ObservableObject {
     @Published var previousSongs: [Song] = []
     @Published var shuffleMode = false
     private var sID = ""
+    private var sIDs: [String: [Song]] = [:]
+    
+    func updateQueue(_ shuffle: Bool) {
+        DispatchQueue.main.async {
+            self.shuffleMode = shuffle
+            if self.shuffleMode {
+                self.songQueue.shuffle()
+            } else {
+                guard let array = self.sIDs[self.sID] else { return }
+                let i = AudioManager.currentSong.twibIdx + 1
+                self.songQueue.removeAll()
+                self.songQueue.append(contentsOf: array[i..<array.endIndex])
+            }
+        }
+    }
     
     func addToQueue(_ song: Song) {
         if song.image_url == "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/none.imageset/none.png" {
@@ -33,6 +48,7 @@ class TwibQueueManager: ObservableObject {
             self.songQueue.removeAll()
             self.songQueue.append(contentsOf: shuffle ? playlist.shuffled() : playlist)
             self.sID = sID
+            self.sIDs[sID] = playlist
             self.shuffleMode = shuffle
             AudioManager.playNew(track: self.getNextSong())
         }
