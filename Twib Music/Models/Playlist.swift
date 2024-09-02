@@ -89,8 +89,9 @@ class Playlist: Identifiable, ObservableObject {
         var total_ms_duration = 0
         DispatchQueue.main.async {
             var allDownloaded = true
-            for track in self.tracks {
+            for (i, track) in self.tracks.enumerated() {
                 track.syncDownloadStatus()
+                track.twibIdx = i
                 total_ms_duration += addToExpectedDownloadSize ? track.duration : 0
                 if !track.isDownloaded {
                     allDownloaded = false
