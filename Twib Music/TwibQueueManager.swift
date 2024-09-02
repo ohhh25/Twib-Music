@@ -69,6 +69,10 @@ class TwibQueueManager: ObservableObject {
             self.sIDs[sID] = playlist
             self.shuffleMode = shuffle
             AudioManager.playNew(track: self.getNextSong())
+            if self.repeatStatus.count > 0 {
+                self.repeatQueue.removeAll()
+                self.repeatQueue.append(contentsOf: shuffle ? playlist.shuffled() : playlist)
+            }
         }
     }
     
