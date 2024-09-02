@@ -12,6 +12,7 @@ var QueueManager = TwibQueueManager()
 class TwibQueueManager: ObservableObject {
     @Published var songQueue: [Song] = []
     @Published var previousSongs: [Song] = []
+    @Published var shuffleMode = false
     private var sID = ""
     
     func addToQueue(_ song: Song) {
@@ -27,11 +28,12 @@ class TwibQueueManager: ObservableObject {
         }
     }
     
-    func addPlaylistToQueue(_ playlist: [Song], sID: String) {
+    func addPlaylistToQueue(_ playlist: [Song], sID: String, shuffle: Bool) {
         DispatchQueue.main.async {
-            self.sID = sID
             self.songQueue.removeAll()
-            self.songQueue.append(contentsOf: playlist)
+            self.songQueue.append(contentsOf: shuffle ? playlist.shuffled() : playlist)
+            self.sID = sID
+            self.shuffleMode = shuffle
             AudioManager.playNew(track: self.getNextSong())
         }
     }

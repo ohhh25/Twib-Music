@@ -20,7 +20,7 @@ struct TrackView: View {
             VStack(alignment: .leading) {
                 Button("", systemImage: isPlaying ? "pause.circle" : "play.circle") {
                     if (!isPlaying && !addedToQueue) {
-                        QueueManager.addPlaylistToQueue(playlist.tracks, sID: playlist.sID)
+                        QueueManager.addPlaylistToQueue(playlist.tracks, sID: playlist.sID, shuffle: playlist.shuffle)
                         addedToQueue = true
                     } else {
                         AudioManager.togglePlayback()
@@ -73,6 +73,7 @@ struct TrackView: View {
             }
             if QueueManager.getPlaylistUniqueID() == playlist.sID {
                 self.isPlaying = AudioManager.isPlaying
+                playlist.shuffle = QueueManager.shuffleMode
             } else {
                 addedToQueue = false
             }
