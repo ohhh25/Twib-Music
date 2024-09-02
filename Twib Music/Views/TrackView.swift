@@ -35,6 +35,17 @@ struct TrackView: View {
             }
                 .padding(.leading, 24)
             Spacer()
+            Button("", systemImage: playlist.shuffle ? "shuffle.circle.fill" : "shuffle.circle") {
+                DispatchQueue.main.async {
+                    playlist.shuffle.toggle()
+                    if QueueManager.getPlaylistUniqueID() == playlist.sID {
+                        QueueManager.updateQueue(playlist.shuffle)
+                    }
+                }
+            }
+            .disabled(playlist.downloadStatus != "complete")
+            .font(.custom("Helvetica", size: 36))
+            Spacer()
             if playlist.downloadStatusIcon == "arrow.down.circle.dotted" {
                 CircularProgressView(progress: playlist.downloadProgress, icon: Image(systemName: "arrow.down"))
                     .padding(.trailing, 6)

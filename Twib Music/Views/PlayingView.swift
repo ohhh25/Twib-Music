@@ -62,10 +62,10 @@ struct PlayingView: View {
             
             // MARK: Playback controls
             HStack {
-                Button("", systemImage: "shuffle") {
-                    print("Shuffle Button Pressed")
+                Button("", systemImage: queueManager.shuffleMode ? "shuffle.circle.fill" : "shuffle.circle") {
+                    QueueManager.updateQueue(!queueManager.shuffleMode)
                 }
-                .font(.custom("Helvetica", size: 24))
+                .font(.custom("Helvetica", size: 36))
                 .disabled(!audioManager.isSong)
                 Spacer()
                 Button("", systemImage: "backward.end.fill") {
