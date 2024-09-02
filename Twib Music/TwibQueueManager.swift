@@ -21,14 +21,29 @@ class TwibQueueManager: ObservableObject {
     
     func updateQueue(_ shuffle: Bool) {
         DispatchQueue.main.async {
+            guard let array = self.sIDs[self.sID] else { return }
             self.shuffleMode = shuffle
             if self.shuffleMode {
                 self.songQueue.shuffle()
             } else {
-                guard let array = self.sIDs[self.sID] else { return }
                 let i = AudioManager.currentSong.twibIdx + 1
                 self.songQueue.removeAll()
                 self.songQueue.append(contentsOf: array[i..<array.endIndex])
+            }
+            if self.repeatStatus.count > 0 {
+                self.repeatQueue.removeAll()
+                self.repeatQueue.append(contentsOf: shuffle ? array.shuffled() : array)
+            }
+        }
+    }
+    
+    func updateQueue(repeat: Bool = true) {
+        DispatchQueue.main.async {
+            if (!self.repeatQueue.isEmpty && self.songQueue.isEmpty) {
+                self.songQueue.append(contentsOf: self.repeatQueue)
+                if self.repeatStatus == "once" {
+                    self.repeatQueue.removeAll()
+                }
             }
         }
     }

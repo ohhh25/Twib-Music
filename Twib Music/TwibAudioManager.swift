@@ -67,6 +67,9 @@ class TwibAudioManager: ObservableObject {
                     self.isSong = false
                     self.elapsedTime = 0
                     self.progress = 0
+                    if QueueManager.repeatStatusIcon != "repeat.circle" {
+                        QueueManager.updateQueue()
+                    }
                     if !QueueManager.songQueue.isEmpty {
                         self.playNew(track: QueueManager.getNextSong())
                     }
@@ -88,6 +91,9 @@ class TwibAudioManager: ObservableObject {
     
     func skipToNextSong() {
         DispatchQueue.main.async {
+            if QueueManager.repeatStatusIcon != "repeat.circle" {
+                QueueManager.updateQueue()
+            }
             if !QueueManager.songQueue.isEmpty {
                 self.playNew(track: QueueManager.getNextSong())
             } else {
