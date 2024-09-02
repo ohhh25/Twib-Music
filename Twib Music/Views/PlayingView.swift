@@ -84,10 +84,10 @@ struct PlayingView: View {
                 }
                 .disabled(!audioManager.isSong)
                 Spacer()
-                Button("", systemImage: "repeat") {
-                    print("Repeat Button Pressed")
+                Button("", systemImage: queueManager.repeatStatusIcon) {
+                    QueueManager.handleRepeatStatus()
                 }
-                .font(.custom("Helvetica", size: 24))
+                .font(.custom("Helvetica", size: 36))
                 .disabled(!audioManager.isSong)
             }
             .font(.custom("Helvetica", size: 36))

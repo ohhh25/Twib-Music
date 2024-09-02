@@ -13,8 +13,11 @@ class TwibQueueManager: ObservableObject {
     @Published var songQueue: [Song] = []
     @Published var previousSongs: [Song] = []
     @Published var shuffleMode = false
+    @Published var repeatStatusIcon = "repeat.circle"
     private var sID = ""
     private var sIDs: [String: [Song]] = [:]
+    private var repeatStatus = ""
+    private var repeatQueue: [Song] = []
     
     func updateQueue(_ shuffle: Bool) {
         DispatchQueue.main.async {
@@ -95,6 +98,42 @@ class TwibQueueManager: ObservableObject {
     func removeFromQueue(_ location: Int) {
         DispatchQueue.main.async {
             self.songQueue.remove(at: location)
+        }
+    }
+    
+    func handleRepeatStatus() {
+        DispatchQueue.main.async {
+            self.repeatQueue.removeAll()
+            switch self.repeatStatus {
+            case "continuous":
+                self.repeatStatus = "once"
+                if let songs = self.sIDs[self.sID] {
+                    self.repeatQueue.append(contentsOf: self.shuffleMode ? songs.shuffled() : songs)
+                } else if AudioManager.isPlaying {
+                    self.repeatQueue.append(AudioManager.currentSong)
+                }
+            case "once":
+                self.repeatStatus = ""
+            default:
+                self.repeatStatus = "continuous"
+                if let songs = self.sIDs[self.sID] {
+                    self.repeatQueue.append(contentsOf: self.shuffleMode ? songs.shuffled() : songs)
+                } else if AudioManager.isPlaying {
+                    self.repeatQueue.append(AudioManager.currentSong)
+                }
+            }
+            self.syncRepeatIcon()
+        }
+    }
+    
+    private func syncRepeatIcon() {
+        switch self.repeatStatus {
+        case "continuous":
+            self.repeatStatusIcon = "repeat.circle.fill"
+        case "once":
+            self.repeatStatusIcon = "repeat.1.circle.fill"
+        default:
+            self.repeatStatusIcon = "repeat.circle"
         }
     }
 }
