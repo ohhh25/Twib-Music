@@ -15,6 +15,7 @@ class Playlist: Identifiable, ObservableObject {
     let visible: Int
     let sID: String
     @Published var tracks: [Song] = []
+    @Published var shuffle = false
 
     var requestBody: [String: Any] = [:]
     var downloadStatus = "Not Downloaded"
