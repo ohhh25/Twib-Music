@@ -102,6 +102,11 @@ class TwibQueueManager: ObservableObject {
         }
     }
     
+    func clearQueue() {
+        self.songQueue.removeAll()
+        self.repeatQueue.removeAll()
+    }
+    
     func addPreviousSong(_ song: Song) {
         if song.image_url == "https://raw.githubusercontent.com/ohhh25/Twib-Music/main/Twib%20Music/Assets.xcassets/none.imageset/none.png" {
             return

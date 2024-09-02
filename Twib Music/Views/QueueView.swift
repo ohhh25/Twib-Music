@@ -18,6 +18,16 @@ struct QueueView: View {
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
                 .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+            HStack {
+                Text("Swipe right to remove")
+                Spacer()
+                Button("Clear All", systemImage: "trash") {
+                    QueueManager.clearQueue()
+                }
+            }
+            .padding(EdgeInsets(top: 2, leading: 24, bottom: 6, trailing: 24))
+            .font(.custom("Helvetica", size: 16))
+                .opacity(queueManager.songQueue.isEmpty ? 0.0 : 1.0)
             if !queueManager.songQueue.isEmpty {
                 Divider()
                 List(Array(queueManager.songQueue.enumerated()), id: \.offset) { idx, song in
