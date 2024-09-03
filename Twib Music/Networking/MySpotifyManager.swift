@@ -37,6 +37,7 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
 
     func sessionManager(manager: SPTSessionManager, didInitiate session: SPTSession) {
         print("session initated")
+        self.saveSession(session)
         SpotifyAPI.saveSession(session)
         DispatchQueue.main.async {
             self.sessionConnected = true
@@ -45,6 +46,7 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
     
     func sessionManager(manager: SPTSessionManager, didRenew session: SPTSession) {
         print("session renewed")
+        self.saveSession(session)
         SpotifyAPI.saveSession(session)
     }
     
@@ -56,5 +58,27 @@ class MySpotifyManager: NSObject, SPTSessionManagerDelegate, ObservableObject {
     
     func handleOpenUrl(_ url: URL) {
         sessionManager.application(UIApplication.shared, open: url, options: [:])
+    }
+    
+    func saveSession(_ session: SPTSession) {
+        do {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: session, requiringSecureCoding: true)
+            UserDefaults.standard.set(data, forKey: "SpotifySessionData")
+        } catch {
+            print("Failed to save session: \(error)")
+        }
+    }
+    
+    func restoreSession() {
+        guard let data = UserDefaults.standard.data(forKey: "SpotifySessionData") else { return }
+        do {
+            if let session = try NSKeyedUnarchiver.unarchivedObject(ofClass: SPTSession.self, from: data) {
+                self.sessionManager.session = session
+                self.sessionManager(manager: sessionManager, didInitiate: session)
+            }
+        } catch {
+            print("Failed to restore session: \(error)")
+            return
+        }
     }
 }
