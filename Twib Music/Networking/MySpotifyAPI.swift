@@ -57,6 +57,15 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
+    func checkSession() {
+        if let session = self.Session {
+            if session.isExpired {
+                print("Session Expired. Renewing...")
+                SpotifyManager.sessionManager.renewSession()
+            }
+        }
+    }
+    
     func satisfyRequest(_ request: URLRequest, completion: @escaping (Data?) -> Void) {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Return if error exists
@@ -257,7 +266,6 @@ class MySpotifyAPI: ObservableObject {
     // MARK: ISRC FOR ALBUM TRACKS
     func add_isrc(_ tracks: [Song], url: String, completion: @escaping ([Song]?) -> Void){
         // Setup Request
-        self.checkSession()
         guard let url = URL(string: url) else { completion(nil); return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
