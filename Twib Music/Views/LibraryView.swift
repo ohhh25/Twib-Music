@@ -30,6 +30,9 @@ struct LibraryView: View {
             }
         }
         .listStyle(.plain)
+        .onAppear() {
+            SpotifyAPI.checkSession()
+        }
     }
 }
 
