@@ -9,7 +9,6 @@ import Foundation
 import Zip
 
 var StorageManager = TwibStorageManager()
-let reset: Bool = false
 
 class TwibStorageManager {
     let manager = FileManager.default
@@ -19,20 +18,6 @@ class TwibStorageManager {
     let songsDirectoryURL: URL
     
     // MARK: BASIC INIT
-    func clearDirectory(at url: URL) throws {
-        let contents = try manager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-        for fileURL in contents {
-            try manager.removeItem(at: fileURL)
-        }
-    }
-    
-    func resetStorage() throws {
-        print("Resetting....")
-        try clearDirectory(at: zipsDirectoryURL)
-        try clearDirectory(at: songsDirectoryURL)
-        print("Done!")
-    }
-    
     init() {
         do {
             self.zipsDirectoryURL = tmpDirectoryURL.appendingPathComponent("zips")
@@ -40,8 +25,24 @@ class TwibStorageManager {
             
             try manager.createDirectory(at: zipsDirectoryURL, withIntermediateDirectories: true)
             try manager.createDirectory(at: songsDirectoryURL, withIntermediateDirectories: true)
-            
-            if reset { try self.resetStorage() }
+        }
+        catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // MARK: CLEARING STORAGE
+    private func clearDirectory(at url: URL) throws {
+        let contents = try manager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+        for fileURL in contents {
+            try manager.removeItem(at: fileURL)
+        }
+    }
+    
+        try clearDirectory(at: songsDirectoryURL)
+        print("Done!")
+    }
+    
         }
         catch {
             print(error.localizedDescription)
