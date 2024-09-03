@@ -10,12 +10,14 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var storageManager = StorageManager
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
             Text("Cache Size: \(storageManager.cacheSize) MB")
                 .font(.custom("Helvetica", size: 24))
                 .padding(.bottom, 6)
+                .foregroundColor(.white)
             Text("Download Size: \(storageManager.songDownloadsSize) MB")
                 .font(.custom("Helvetica", size: 24))
+                .foregroundColor(.white)
             Group {
                 Button("Remove Cache") {
                     do { try StorageManager.clearCache() }
@@ -33,7 +35,17 @@ struct SettingsView: View {
             .background(Color.orange)
             .cornerRadius(32)
             .padding(.top, 24)
+            Text("Liking the App? Consider giving\nTwib's project a star on GitHub!")
+                .font(.custom("Helvetica", size: 18))
+                .padding(.top, 36)
+                .foregroundColor(.white)
+            Button("https://github.com/ohhh25/Twib-Music", systemImage: "link") {
+                UIApplication.shared.open(URL(string: "https://github.com/ohhh25/Twib-Music")!)
+            }
+            .padding(.top, 6)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.black)
         .onAppear {
             do {
                 try StorageManager.syncCacheSize()

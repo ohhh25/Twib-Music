@@ -14,6 +14,9 @@ fileprivate let grad = [botColor, topColor, botColor, topColor, topColor]
 
 struct HomeView: View {
     @StateObject private var spotifyManager = SpotifyManager
+    init() {
+        UITabBar.appearance().unselectedItemTintColor = UIColor.gray
+    }
     
     var body: some View {
         Group {
