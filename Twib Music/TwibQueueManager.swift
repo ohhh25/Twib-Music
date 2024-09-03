@@ -103,8 +103,11 @@ class TwibQueueManager: ObservableObject {
     }
     
     func clearQueue() {
-        self.songQueue.removeAll()
-        self.repeatQueue.removeAll()
+        DispatchQueue.main.async {
+            self.songQueue.removeAll()
+            self.repeatQueue.removeAll()
+            _ = self.getPlaylistUniqueID(remove: true)
+        }
     }
     
     func addPreviousSong(_ song: Song) {
