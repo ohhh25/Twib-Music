@@ -66,7 +66,7 @@ class MySpotifyAPI: ObservableObject {
         }
     }
     
-    func satisfyRequest(_ request: URLRequest, completion: @escaping (Data?) -> Void) {
+    func satisfyRequest(_ request: URLRequest, retryCount: Int = 0, completion: @escaping (Data?) -> Void) {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Return if error exists
             if let error = error {
@@ -80,7 +80,19 @@ class MySpotifyAPI: ObservableObject {
             }
             // Check Status Code
             if !self.handleReponse(httpResponse) {
-                completion(nil); return
+                if httpResponse.statusCode == 429 {
+                    if retryCount < 2 {
+                        let delay = DispatchTime.now() + .seconds(2)
+                        DispatchQueue.global().asyncAfter(deadline: delay) {
+                            self.satisfyRequest(request, retryCount: retryCount + 1, completion: completion)
+                        }
+                    } else {
+                        print("Max retry attempts reached.")
+                        completion(nil); return
+                    }
+                } else {
+                    completion(nil); return
+                }
             }
             // Check If Data was Received
             guard let data = data else {
