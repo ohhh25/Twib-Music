@@ -52,6 +52,11 @@ struct HomeView: View {
             }
         }
         .background(AngularGradient(colors: grad, center: UnitPoint(x: 0.5, y: 0.4)))
+        .onAppear {
+            if !SpotifyManager.sessionConnected {
+                spotifyManager.restoreSession()
+            }
+        }
     }
 }
 
