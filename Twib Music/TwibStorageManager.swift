@@ -93,7 +93,7 @@ class TwibStorageManager: ObservableObject {
     func syncCacheSize() throws {
         let cacheSize = try getDirectorySize(at: tmpDirectoryURL)
         DispatchQueue.main.async {
-            let rawValue = Double(cacheSize) / (1024 * 1024)
+            let rawValue = Double(cacheSize) / (1000 * 1000)
             self.cacheSize = String(format: "%.3f", rawValue)
         }
     }
@@ -101,7 +101,7 @@ class TwibStorageManager: ObservableObject {
     func syncDownloadsSize() throws {
         let downloadsSize = try getDirectorySize(at: songsDirectoryURL)
         DispatchQueue.main.async {
-            let rawValue = Double(downloadsSize) / (1024 * 1024)
+            let rawValue = Double(downloadsSize) / (1000 * 1000)
             self.songDownloadsSize = String(format: "%.3f", rawValue)
         }
     }
