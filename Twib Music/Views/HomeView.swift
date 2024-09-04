@@ -22,6 +22,7 @@ struct HomeView: View {
         Group {
             if !spotifyManager.sessionConnected {
                 HeadingView()
+                    .foregroundStyle(.black)
                 Image("Icon")
                     .resizable()
                     .padding(.top, 12)

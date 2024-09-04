@@ -18,8 +18,10 @@ struct QueueView: View {
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
                 .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+                .foregroundStyle(.black)
             HStack {
                 Text("Swipe right to remove")
+                    .foregroundStyle(.black)
                 Spacer()
                 Button("Clear All", systemImage: "trash") {
                     QueueManager.clearQueue()
@@ -41,6 +43,7 @@ struct QueueView: View {
                             .fontWeight(.light)
                             .lineLimit(1)
                     }
+                    .foregroundStyle(.black)
                     .listRowBackground(Color.clear)
                     .swipeActions(edge: .trailing) {
                         Button(role: .destructive) {

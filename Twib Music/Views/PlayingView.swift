@@ -10,6 +10,7 @@ import SwiftUI
 fileprivate let topColor = Color(red:(118.0 / 255.0), green:(214.0 / 255.0), blue:(255.0 / 255.0))
 fileprivate let botColor = Color(red:(255.0 / 255.0), green:(252.0 / 255.0), blue:(121.0 / 255.0))
 fileprivate let grad = [topColor, botColor, topColor]
+fileprivate let buttonColor = Color(red:(122.0 / 255.0), green:(129.0 / 255.0), blue:(255.0 / 255.0))
 
 struct PlayingView: View {
     @StateObject private var audioManager = AudioManager
@@ -21,7 +22,7 @@ struct PlayingView: View {
             Text(audioManager.isSong ? "Playing Song" : "No music playing")
                 .font(.custom("Helvetica", size: 24))
                 .fontWeight(.medium)
-            
+                .foregroundStyle(Color.black)
             // MARK: Song Image
             AsyncImage(url: URL(string: audioManager.currentSong.image_url)) { image in
                 image.resizable()
@@ -41,11 +42,12 @@ struct PlayingView: View {
                 .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(height: 72, alignment: .topLeading)
+                .foregroundStyle(Color.black)
             Text(audioManager.currentSong.artist)
                 .font(.custom("Helvetica", size: 18))
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
+                .foregroundStyle(Color.black)
             // MARK: Playback Progress
             Slider(value: $audioManager.progress, in: 0...1)
                 .padding(EdgeInsets(top: 24, leading: 0, bottom: 6, trailing: 0))
@@ -58,6 +60,7 @@ struct PlayingView: View {
                     .font(.custom("Helvetica", size: 16))
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
+            .foregroundStyle(Color.black)
             .padding(.bottom, 24)
             
             // MARK: Playback controls
@@ -67,28 +70,33 @@ struct PlayingView: View {
                 }
                 .font(.custom("Helvetica", size: 36))
                 .disabled(!audioManager.isSong)
+                .foregroundColor(audioManager.isSong ? buttonColor : .black.opacity(0.2))
                 Spacer()
                 Button("", systemImage: "backward.end.fill") {
                     audioManager.backToPreviousSong()
                 }
                 .disabled(queueManager.previousSongs.isEmpty && !audioManager.isSong)
+                .foregroundColor((queueManager.previousSongs.isEmpty && !audioManager.isSong) ? .black.opacity(0.2): buttonColor)
                 Spacer()
                 Button("", systemImage: audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill") {
                     audioManager.togglePlayback()
                 }
                 .font(.custom("Helvetica", size: 72))
                 .disabled(!audioManager.isSong)
+                .foregroundColor(audioManager.isSong ? buttonColor : .black.opacity(0.2))
                 Spacer()
                 Button("", systemImage: "forward.end.fill") {
                     audioManager.skipToNextSong()
                 }
                 .disabled(!audioManager.isSong)
+                .foregroundColor(audioManager.isSong ? buttonColor : .black.opacity(0.2))
                 Spacer()
                 Button("", systemImage: queueManager.repeatStatusIcon) {
                     QueueManager.handleRepeatStatus()
                 }
                 .font(.custom("Helvetica", size: 36))
                 .disabled(!audioManager.isSong)
+                .foregroundColor(audioManager.isSong ? buttonColor : .black.opacity(0.2))
             }
             .font(.custom("Helvetica", size: 36))
             
