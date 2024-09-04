@@ -18,23 +18,32 @@ struct SettingsView: View {
             Text("Download Size: \(storageManager.songDownloadsSize) MB")
                 .font(.custom("Helvetica", size: 24))
                 .foregroundColor(.white)
-            Group {
-                Button("Remove Cache") {
-                    do { try StorageManager.clearCache() }
-                    catch { print("Error clearing cache: \(error)") }
+            if storageManager.busy {
+                Text("Cannot make changes to storage while downloading songs. Please wait until downloads are complete.")
+                    .font(.custom("Helvetica", size: 24))
+                    .italic()
+                    .foregroundColor(.yellow)
+                    .frame(width: 300, height: 151)
+                    .padding(.bottom, -14)
+            } else {
+                Group {
+                    Button("Remove Cache") {
+                        do { try StorageManager.clearCache() }
+                        catch { print("Error clearing cache: \(error)") }
+                    }
+                    Button("Remove ALL Downloads") {
+                        do { try StorageManager.clearDownloads() }
+                        catch { print("Error removing downloads: \(error)") }
+                    }
                 }
-                Button("Remove ALL Downloads") {
-                    do { try StorageManager.clearDownloads() }
-                    catch { print("Error removing downloads: \(error)") }
-                }
+                .disabled(storageManager.busy)
+                .font(.custom("Helvetica", size: 18))
+                .foregroundColor(.white)
+                .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
+                .background(Color.orange)
+                .cornerRadius(32)
+                .padding(.top, 24)
             }
-            .disabled(storageManager.busy)
-            .font(.custom("Helvetica", size: 18))
-            .foregroundColor(.white)
-            .padding(EdgeInsets(top: 14, leading: 28, bottom: 14, trailing: 28))
-            .background(Color.orange)
-            .cornerRadius(32)
-            .padding(.top, 24)
             Text("Liking the App? Consider giving\nTwib's project a star on GitHub!")
                 .font(.custom("Helvetica", size: 18))
                 .padding(.top, 36)
