@@ -136,6 +136,7 @@ class Playlist: Identifiable, ObservableObject {
         DispatchQueue.main.async {
             self.downloadProgress = 0.0
             self.setDownloadStatus("in progress")
+            StorageManager.busy = true
         }
         if self.requestBody.isEmpty {
             self.createRequestBody()
@@ -143,7 +144,14 @@ class Playlist: Identifiable, ObservableObject {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: self.requestBody, options: .prettyPrinted)
             TwibServerAPI.downloadPlaylist(jsonData, expectedSize: self.expectedDownloadSize!, completion: { success in
-                success ? self.syncDownloadStatus() : self.setDownloadStatus("failed")
+                if success {
+                    self.syncDownloadStatus()
+                } else {
+                    self.setDownloadStatus("failed")
+                    DispatchQueue.main.async {
+                        StorageManager.busy = false
+                    }
+                }
             }, progress: { progress in
                 DispatchQueue.main.async {
                     self.downloadProgress = min(progress, 1.0)
@@ -151,6 +159,9 @@ class Playlist: Identifiable, ObservableObject {
             })
         } catch {
             print("Failed to serialize the JSON: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                StorageManager.busy = false
+            }
             syncDownloadStatus()
         }
     }
