@@ -61,7 +61,7 @@ struct PlayingView: View {
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
             .foregroundStyle(Color.black)
-            .padding(.bottom, 24)
+            .padding(.bottom, 6)
             
             // MARK: Playback controls
             HStack {
@@ -102,7 +102,7 @@ struct PlayingView: View {
             
             Spacer()
         }
-        .padding(EdgeInsets(top: 12, leading: 24, bottom: 0, trailing: 24))
+        .padding(EdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24))
         .background(AngularGradient(colors: grad, center: UnitPoint(x: 0, y: 0)))
     }
 }
