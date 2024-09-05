@@ -93,7 +93,7 @@ class Playlist: Identifiable, ObservableObject {
             for (i, track) in self.tracks.enumerated() {
                 track.syncDownloadStatus()
                 track.twibIdx = i
-                total_ms_duration += addToExpectedDownloadSize ? track.duration : 0
+                total_ms_duration += (addToExpectedDownloadSize && !track.isDownloaded) ? track.duration : 0
                 if !track.isDownloaded {
                     allDownloaded = false
                 }
@@ -113,7 +113,10 @@ class Playlist: Identifiable, ObservableObject {
     
     // MARK: DOWNLOAD
     func createRequestBody() {
-        self.requestBody["metadata"] = self.tracks.map { song in
+        self.requestBody["metadata"] = self.tracks.compactMap { song -> [String: Any]? in
+            if song.isDownloaded {
+                return nil
+            }
             return [
                 "isrc": song.external_ids["isrc"] as? String ?? "",
                 "sID": song.sID,
