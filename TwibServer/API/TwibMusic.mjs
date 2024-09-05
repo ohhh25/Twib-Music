@@ -15,6 +15,7 @@ let processingBatch = false;
 
 const chunkArray = (array, size) => {
   const result = [];
+  console.log(`Received metadata for ${array.length} songs`);
   for (let i = 0; i < array.length; i += size) {
     result.push(array.slice(i, i + size));
   }
