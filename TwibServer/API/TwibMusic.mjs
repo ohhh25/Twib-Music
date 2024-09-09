@@ -124,7 +124,7 @@ router.post("/", async (req, res) => {
 
   request.zipStream.on('error', (err) => {
     console.error(`Error in zip stream: ${err.message}`);
-    res.status(500).send("Error processing zip");
+    res.end();
   });
 
   request.zipStream.pipe(res);    // pipe zip stream to response
@@ -136,7 +136,7 @@ router.post("/", async (req, res) => {
     await processQueue();    // process the queue
   } catch (err) {
     console.error(`Error processing queue: ${err.message}`);
-    res.status(500).send("Error processing request");
+    res.end();
   }
 });
 
