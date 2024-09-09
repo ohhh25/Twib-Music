@@ -37,7 +37,7 @@ npm install || { echo "npm install failed"; exit 1; }
 
 # Set the environment variables
 export SCOPE="public"
-export HOST="80"
+export PORT="80"
 
 # Stop the server if it is already running
 pm2 stop all

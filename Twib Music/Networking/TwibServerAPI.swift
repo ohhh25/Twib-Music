@@ -8,7 +8,7 @@
 import Foundation
 
 let hostname = "HOSTNAME"
-let port = 3000
+let port = 80
 
 var TwibServerAPI = MyTwibServerAPI(hostname: hostname, port: port)
 
