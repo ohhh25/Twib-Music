@@ -5,13 +5,14 @@ import getHostname from "./getHostname.mjs";
 /* ENVIROMENT VARIABLES
   *   SCOPE: local, public
   *   HOSTNAME: only for local scope
-  *   PORT: 3000
   * HOW TO SET ENVIRONMENT VARIABLES
   *   export ENV_VARIABLE=value
 */
 
+const getPort = {"public": 80}
+
 const hostname = getHostname[process.env.SCOPE] || "127.0.0.1"
-const port = parseInt(process.env.PORT) || 3000;
+const port = getPort[process.env.SCOPE] || 3000;
 
 const getHost = {"public": "0.0.0.0"}
 const host = getHost[process.env.SCOPE] || hostname;
