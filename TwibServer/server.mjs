@@ -11,7 +11,7 @@ import getHostname from "./getHostname.mjs";
 */
 
 const hostname = getHostname[process.env.SCOPE] || "127.0.0.1"
-const port = process.env.PORT || 3000;
+const port = parseInt(process.env.PORT) || 3000;
 
 const getHost = {"public": "0.0.0.0"}
 const host = getHost[process.env.SCOPE] || hostname;
