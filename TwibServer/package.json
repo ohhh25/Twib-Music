@@ -13,6 +13,7 @@
     "@distube/ytdl-core": "^4.14.4",
     "archiver": "^7.0.1",
     "express": "^4.19.2",
+    "pm2": "^5.4.2",
     "yt-search": "^2.11.1"
   }
 }
