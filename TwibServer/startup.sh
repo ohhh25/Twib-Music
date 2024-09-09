@@ -46,16 +46,5 @@ pm2 start server.mjs --name Twib-Server || { echo "Failed to start the server"; 
 pm2 save
 echo -e "\n$SUCCESS_MSG"
 
-# Display the logs from process "Twib-Server" and save them to twib_logs.txt
-{
-    pm2 logs Twib-Server | tee twib_logs.txt
-} &
-
-# Capture the background process ID
-PM2_LOG_PID=$!
-
-# Wait for the logging process to finish
-wait $PM2_LOG_PID
-
-# After the wait, perform cleanup or additional tasks
-echo "Log monitoring finished."
+# Display the logs from process "Twib-Server"
+pm2 logs Twib-Server
