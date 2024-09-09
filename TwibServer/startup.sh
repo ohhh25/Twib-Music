@@ -44,6 +44,7 @@ pm2 stop all
 
 # Start the server with name "Twib-Server"
 pm2 start server.mjs --name Twib-Server || { echo "Failed to start the server"; exit 1; }
+pm2 save
 echo -e "\n$SUCCESS_MSG"
 
 # Display the logs from process "Twib-Server" and save them to twib_logs.txt
