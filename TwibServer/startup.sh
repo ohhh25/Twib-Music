@@ -40,7 +40,7 @@ export SCOPE="public"
 export HOST="80"
 
 # Stop the server if it is already running
-pm2 stop all || { echo "Failed to stop the server"; exit 1; }
+pm2 stop all
 
 # Start the server with name "Twib-Server"
 pm2 start server.mjs --name Twib-Server || { echo "Failed to start the server"; exit 1; }
