@@ -1,7 +1,7 @@
 import express from "express";
 import musicAPI from "./API/TwibMusic.mjs";
 
-const hostname = "127.0.0.1";
+const hostname = "0.0.0.0";    // 127.0.0.1
 const port = 3000;
 
 const homepage = `http://${hostname}:${port}`;
