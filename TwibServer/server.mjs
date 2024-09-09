@@ -1,8 +1,20 @@
 import express from "express";
 import musicAPI from "./API/TwibMusic.mjs";
+import getHostname from "./getHostname.mjs";
 
-const hostname = "0.0.0.0";    // 127.0.0.1
-const port = 3000;
+/* ENVIROMENT VARIABLES
+  *   SCOPE: local, public
+  *   HOSTNAME: only for local scope
+  *   PORT: 3000
+  * HOW TO SET ENVIRONMENT VARIABLES
+  *   export ENV_VARIABLE=value
+*/
+
+const hostname = getHostname[process.env.SCOPE] || "127.0.0.1"
+const port = process.env.PORT || 3000;
+
+const getHost = {"public": "0.0.0.0"}
+const host = getHost[process.env.SCOPE] || hostname;
 
 const homepage = `http://${hostname}:${port}`;
 const gitHub = "https://github.com/ohhh25/Twib-Music";
@@ -27,7 +39,7 @@ app.get("*", (req, res) => {
   res.status(404).send('Page Not Found!\n');
 });
 
-app.listen(port, hostname, () => {
+app.listen(port, host, () => {
   console.log(`Server running at ${homepage}/\n`);
   console.log(`${homepage}/api/Twib-Music/`);
 });
