@@ -10,6 +10,7 @@ import Foundation
 var YouTubeAPI = MyYouTubeAPI()
 
 class MyYouTubeAPI {
+    private let APIkey = "APIKEY"
     let isrc_base = "https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video"
     
     func isrcSearch(_ isrc: String, completion: @escaping (String?) -> Void) {
