@@ -46,7 +46,11 @@ const singleDownload = async (song, zipStream) => {
   const url = await search(song);    // get URL
   const audioStream = ytdl(url, { quality: '140' }, { agent });    // get audio stream
 
-  return new Promise((resolve, reject) => {
+  const timeout = new Promise((_, reject) => 
+    setTimeout(() => reject(new Error(`Download timed out for ${song.name}`)), 10000)
+  );
+
+  const downloadTask = new Promise((resolve, reject) => {
     audioStream.on('error', (err) => {
       console.error(`Error in audio stream: ${err.message}`);
       reject(err);
@@ -59,6 +63,8 @@ const singleDownload = async (song, zipStream) => {
       resolve();
     });
   });
+
+  return Promise.race([downloadTask, timeout]);
 };
 
 // Process a batch of songs
@@ -115,7 +121,7 @@ const processQueue = async () => {
 
 router.post("/", async (req, res) => {
   const { metadata } = req.body;    // extract metadata from request body
-  const batchSize = 10;    // number of songs to download in each batch
+  const batchSize = 1;    // number of songs to download in each batch
 
   // Create a new request object
   const request = {
