@@ -4,8 +4,9 @@
 WARN_MSG="WARNING: ONLY USE THIS SCRIPT IF YOU ARE RUNNING THE SERVER ON A
  LINUX MACHINE AND ARE DEPLOYING THE SERVER PUBLICLY ON THE INTERNET"
 
-SUCCESS_MSG="Server started successfully. Logs are being displayed and saved
- to twib_logs.txt. Press Ctrl+C to stop displaying logs and stop the server."
+SUCCESS_MSG="Server started successfully. 
+ Use 'pm2 logs Twib-Server' to view the logs.
+ Use 'pm2 stop all' to stop the server."
 
 # Function to handle script interruption
 # This function will be called when the user presses Ctrl+C
@@ -45,6 +46,3 @@ pm2 stop all
 pm2 start server.mjs --name Twib-Server || { echo "Failed to start the server"; exit 1; }
 pm2 save
 echo -e "\n$SUCCESS_MSG"
-
-# Display the logs from process "Twib-Server"
-pm2 logs Twib-Server
