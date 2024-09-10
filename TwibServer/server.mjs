@@ -12,7 +12,7 @@ import getHostname from "./getHostname.mjs";
 const getPort = {"public": 8080}
 
 const hostname = getHostname[process.env.SCOPE] || "127.0.0.1"
-const port = 8080;
+const port = getPort[process.env.SCOPE] || 3000;
 
 const getHost = {"public": "0.0.0.0"}
 const host = getHost[process.env.SCOPE] || hostname;
