@@ -7,10 +7,7 @@
 
 import Foundation
 
-let hostname = "HOSTNAME"
-let port = 8080
-
-var TwibServerAPI = MyTwibServerAPI(hostname: hostname, port: port)
+var TwibServerAPI = MyTwibServerAPI(domain_name: "DOMAIN_NAME")
 
 class MyTwibServerAPI: NSObject, URLSessionDownloadDelegate {
     private let base: String
@@ -19,8 +16,8 @@ class MyTwibServerAPI: NSObject, URLSessionDownloadDelegate {
     private var completionHandlers: [URLSessionTask: (Bool) -> Void] = [:]
     private var expectedSizes: [URLSessionTask: Int64] = [:]
     
-    init(hostname: String, port: Int) {
-        self.base = "http://\(hostname):\(port)/api/Twib-Music"
+    init(domain_name: String) {
+        self.base = "https://\(domain_name)/api/Twib-Music"
         self.url = URL(string: self.base)!
     }
     
