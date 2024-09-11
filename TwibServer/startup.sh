@@ -36,9 +36,6 @@ read -n 1 -s
 # Install the required dependencies
 npm install || { echo "npm install failed"; exit 1; }
 
-# Set the environment variable
-export SCOPE="public"
-
 # Stop the server if it is already running
 pm2 stop all
 
