@@ -34,7 +34,10 @@ class MyTwibServerAPI: NSObject, URLSessionDownloadDelegate {
     
     func downloadPlaylist(_ jsonData: Data, expectedSize: Int64, completion: @escaping (Bool) -> Void, progress: @escaping (Double) -> Void) {
         let request = prepareDownloadRequest(jsonData)
-        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        
+        let uniqueID = UUID().uuidString
+        let config = URLSessionConfiguration.background(withIdentifier: "l.TwibMusic.downloadPlaylist.\(uniqueID)")
+        let session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         let task = session.downloadTask(with: request)
         
         completionHandlers[task] = completion
