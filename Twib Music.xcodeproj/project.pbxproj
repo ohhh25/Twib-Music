@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,6 +24,7 @@
 		F48DBF4A2C61591B00FF8D9F /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF492C61591B00FF8D9F /* TrackView.swift */; };
 		F48DBF4C2C615BE800FF8D9F /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF4B2C615BE800FF8D9F /* Playlist.swift */; };
 		F48DBF502C627BE600FF8D9F /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF4F2C627BE600FF8D9F /* Song.swift */; };
+		F493DC542C92C89300C63907 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F493DC532C92C89300C63907 /* SpotifyiOS */; };
 		F49F1F262C686BF3004EC8F9 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F1F252C686BF3004EC8F9 /* LibraryView.swift */; };
 		F4A707BB2C66BEA100498CA0 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A707BA2C66BEA100498CA0 /* Album.swift */; };
 		F4B5CC982C598FA100C92977 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4B5CC972C598FA100C92977 /* SpotifyiOS */; };
@@ -72,6 +73,7 @@
 			files = (
 				F4E278682C39070F00C924EC /* SpotifyiOS in Frameworks */,
 				F476A6692C5ADC6C008F5E53 /* SpotifyiOS in Frameworks */,
+				F493DC542C92C89300C63907 /* SpotifyiOS in Frameworks */,
 				F43F2E5A2C74262D002C1CD6 /* Zip in Frameworks */,
 				F4B5CC982C598FA100C92977 /* SpotifyiOS in Frameworks */,
 			);
@@ -181,6 +183,7 @@
 				F4B5CC972C598FA100C92977 /* SpotifyiOS */,
 				F476A6682C5ADC6C008F5E53 /* SpotifyiOS */,
 				F43F2E592C74262D002C1CD6 /* Zip */,
+				F493DC532C92C89300C63907 /* SpotifyiOS */,
 			);
 			productName = "Twib Music";
 			productReference = F4B7B4C72C35235800A348D3 /* Twib Music.app */;
@@ -212,8 +215,8 @@
 			);
 			mainGroup = F4B7B4BE2C35235800A348D3;
 			packageReferences = (
-				F476A6672C5ADC6C008F5E53 /* XCLocalSwiftPackageReference "ios-sdk-2.1.6" */,
 				F43F2E582C74262D002C1CD6 /* XCRemoteSwiftPackageReference "Zip" */,
+				F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */,
 			);
 			productRefGroup = F4B7B4C82C35235800A348D3 /* Products */;
 			projectDirPath = "";
@@ -487,20 +490,21 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		F476A6672C5ADC6C008F5E53 /* XCLocalSwiftPackageReference "ios-sdk-2.1.6" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "ios-sdk-2.1.6";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		F43F2E582C74262D002C1CD6 /* XCRemoteSwiftPackageReference "Zip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Zip";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.2;
+				kind = exactVersion;
+				version = 2.1.2;
+			};
+		};
+		F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/spotify/ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 2.1.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -513,6 +517,11 @@
 		};
 		F476A6682C5ADC6C008F5E53 /* SpotifyiOS */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = SpotifyiOS;
+		};
+		F493DC532C92C89300C63907 /* SpotifyiOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */;
 			productName = SpotifyiOS;
 		};
 		F4B5CC972C598FA100C92977 /* SpotifyiOS */ = {

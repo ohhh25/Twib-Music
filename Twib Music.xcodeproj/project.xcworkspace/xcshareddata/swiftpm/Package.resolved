@@ -1,6 +1,15 @@
 {
-  "originHash" : "2fd562b545e373fe21826e4e0b4525440fd51876c47be8b0c3ae7a81016b298e",
+  "originHash" : "63d4137e035e1a4ea81636929311a1e417692a245c361b3add66266696d05332",
   "pins" : [
+    {
+      "identity" : "ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/spotify/ios-sdk",
+      "state" : {
+        "revision" : "cc087da108cc95f3ca4aa4e64a526be688472bcb",
+        "version" : "2.1.6"
+      }
+    },
     {
       "identity" : "zip",
       "kind" : "remoteSourceControl",
