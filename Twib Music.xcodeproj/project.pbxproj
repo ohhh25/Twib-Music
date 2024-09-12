@@ -10,7 +10,6 @@
 		F415C1CA2C81058300B3CD48 /* TwibQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F415C1C92C81058300B3CD48 /* TwibQueueManager.swift */; };
 		F41FD3952C4DF0200078ABD0 /* MySpotifyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41FD3942C4DF01C0078ABD0 /* MySpotifyManager.swift */; };
 		F43F2E572C740310002C1CD6 /* TwibStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43F2E562C740310002C1CD6 /* TwibStorageManager.swift */; };
-		F43F2E5A2C74262D002C1CD6 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = F43F2E592C74262D002C1CD6 /* Zip */; };
 		F441B22E2C6563BB006F2118 /* HeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441B22D2C6563BB006F2118 /* HeadingView.swift */; };
 		F44B796D2C7137F90064F471 /* TwibServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B796C2C7137F90064F471 /* TwibServerAPI.swift */; };
 		F45199BD2C7E483300C9CD93 /* TwibAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45199BC2C7E483300C9CD93 /* TwibAudioManager.swift */; };
@@ -19,21 +18,19 @@
 		F45B9E902C6AC1B500BE0B84 /* MyYouTubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B9E8F2C6AC1B500BE0B84 /* MyYouTubeAPI.swift */; };
 		F45DD0772C7D095A00DCF6A9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DD0762C7D095A00DCF6A9 /* SettingsView.swift */; };
 		F471AF302C5C4B9F00CC1E62 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F471AF2F2C5C4B9F00CC1E62 /* PlaylistView.swift */; };
-		F476A6692C5ADC6C008F5E53 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F476A6682C5ADC6C008F5E53 /* SpotifyiOS */; };
 		F476A66D2C5AF4D0008F5E53 /* MySpotifyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F476A66C2C5AF4D0008F5E53 /* MySpotifyAPI.swift */; };
 		F48DBF4A2C61591B00FF8D9F /* TrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF492C61591B00FF8D9F /* TrackView.swift */; };
 		F48DBF4C2C615BE800FF8D9F /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF4B2C615BE800FF8D9F /* Playlist.swift */; };
 		F48DBF502C627BE600FF8D9F /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DBF4F2C627BE600FF8D9F /* Song.swift */; };
-		F493DC542C92C89300C63907 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F493DC532C92C89300C63907 /* SpotifyiOS */; };
 		F49F1F262C686BF3004EC8F9 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49F1F252C686BF3004EC8F9 /* LibraryView.swift */; };
 		F4A707BB2C66BEA100498CA0 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A707BA2C66BEA100498CA0 /* Album.swift */; };
-		F4B5CC982C598FA100C92977 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4B5CC972C598FA100C92977 /* SpotifyiOS */; };
 		F4B7B4CB2C35235800A348D3 /* Twib_MusicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7B4CA2C35235800A348D3 /* Twib_MusicApp.swift */; };
 		F4B7B4CF2C35235900A348D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B7B4CE2C35235900A348D3 /* Assets.xcassets */; };
 		F4B7B4D22C35235900A348D3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B7B4D12C35235900A348D3 /* Preview Assets.xcassets */; };
 		F4D95A272C76B51B005AF5F8 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D95A262C76B51B005AF5F8 /* ItemView.swift */; };
-		F4E278682C39070F00C924EC /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4E278672C39070F00C924EC /* SpotifyiOS */; };
 		F4E2786E2C39119100C924EC /* Twib-Music-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E2786D2C39119100C924EC /* Twib-Music-Bridging-Header.m */; };
+		F4E280AE2C9344720016F34B /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = F4E280AD2C9344720016F34B /* Zip */; };
+		F4E280B42C93448B0016F34B /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = F4E280B32C93448B0016F34B /* SpotifyiOS */; };
 		F4EB28E42C37A5A5003406EC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB28E32C37A5A5003406EC /* HomeView.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,11 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4E278682C39070F00C924EC /* SpotifyiOS in Frameworks */,
-				F476A6692C5ADC6C008F5E53 /* SpotifyiOS in Frameworks */,
-				F493DC542C92C89300C63907 /* SpotifyiOS in Frameworks */,
-				F43F2E5A2C74262D002C1CD6 /* Zip in Frameworks */,
-				F4B5CC982C598FA100C92977 /* SpotifyiOS in Frameworks */,
+				F4E280AE2C9344720016F34B /* Zip in Frameworks */,
+				F4E280B42C93448B0016F34B /* SpotifyiOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,8 +176,8 @@
 				F4E278672C39070F00C924EC /* SpotifyiOS */,
 				F4B5CC972C598FA100C92977 /* SpotifyiOS */,
 				F476A6682C5ADC6C008F5E53 /* SpotifyiOS */,
-				F43F2E592C74262D002C1CD6 /* Zip */,
-				F493DC532C92C89300C63907 /* SpotifyiOS */,
+				F4E280AD2C9344720016F34B /* Zip */,
+				F4E280B32C93448B0016F34B /* SpotifyiOS */,
 			);
 			productName = "Twib Music";
 			productReference = F4B7B4C72C35235800A348D3 /* Twib Music.app */;
@@ -215,8 +209,8 @@
 			);
 			mainGroup = F4B7B4BE2C35235800A348D3;
 			packageReferences = (
-				F43F2E582C74262D002C1CD6 /* XCRemoteSwiftPackageReference "Zip" */,
-				F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */,
+				F4E280AC2C9344720016F34B /* XCRemoteSwiftPackageReference "Zip" */,
+				F4E280B22C93448B0016F34B /* XCRemoteSwiftPackageReference "ios-sdk" */,
 			);
 			productRefGroup = F4B7B4C82C35235800A348D3 /* Products */;
 			projectDirPath = "";
@@ -491,15 +485,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F43F2E582C74262D002C1CD6 /* XCRemoteSwiftPackageReference "Zip" */ = {
+		F4E280AC2C9344720016F34B /* XCRemoteSwiftPackageReference "Zip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Zip";
 			requirement = {
-				kind = exactVersion;
-				version = 2.1.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.2;
 			};
 		};
-		F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+		F4E280B22C93448B0016F34B /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/spotify/ios-sdk";
 			requirement = {
@@ -510,18 +504,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F43F2E592C74262D002C1CD6 /* Zip */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F43F2E582C74262D002C1CD6 /* XCRemoteSwiftPackageReference "Zip" */;
-			productName = Zip;
-		};
 		F476A6682C5ADC6C008F5E53 /* SpotifyiOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SpotifyiOS;
-		};
-		F493DC532C92C89300C63907 /* SpotifyiOS */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F493DC522C92C89300C63907 /* XCRemoteSwiftPackageReference "ios-sdk" */;
 			productName = SpotifyiOS;
 		};
 		F4B5CC972C598FA100C92977 /* SpotifyiOS */ = {
@@ -530,6 +514,16 @@
 		};
 		F4E278672C39070F00C924EC /* SpotifyiOS */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = SpotifyiOS;
+		};
+		F4E280AD2C9344720016F34B /* Zip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E280AC2C9344720016F34B /* XCRemoteSwiftPackageReference "Zip" */;
+			productName = Zip;
+		};
+		F4E280B32C93448B0016F34B /* SpotifyiOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E280B22C93448B0016F34B /* XCRemoteSwiftPackageReference "ios-sdk" */;
 			productName = SpotifyiOS;
 		};
 /* End XCSwiftPackageProductDependency section */
