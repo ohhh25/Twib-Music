@@ -17,7 +17,7 @@ class MyTwibServerAPI: NSObject, URLSessionDownloadDelegate {
     private var expectedSizes: [URLSessionTask: Int64] = [:]
     
     init(domain_name: String) {
-        self.base = "https://\(domain_name)/api/Twib-Music"
+        self.base = "http://\(domain_name)/api/Twib-Music"
         self.url = URL(string: self.base)!
     }
     
