@@ -137,8 +137,13 @@ class MySpotifyAPI: ObservableObject {
         self.satisfyRequest(request) { data in
             guard let data = data else { return }
             if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                if let items = json["items"] as? [[String: Any]] {
-                    // pass an array of dictionaries get an array of Playlist struct
+                if let unfilteredItems = json["items"] as? [Any] {
+                    let items = unfilteredItems.compactMap { item -> [String: Any]? in
+                        guard let dictionary = item as? [String: Any], !dictionary.isEmpty else {
+                            return nil
+                        }
+                        return dictionary
+                    }
                     DispatchQueue.main.async {
                         self.playlists.append(contentsOf: self.parsePlaylists(items))
                         print("\(self.playlists.count) Playlists fetched")
