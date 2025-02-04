@@ -7,7 +7,7 @@
 
 import Foundation
 
-var TwibServerAPI = MyTwibServerAPI(domain_name: "DOMAIN_NAME")
+var TwibServerAPI = MyTwibServerAPI(domain_name: "twibit.us")
 
 class MyTwibServerAPI: NSObject, URLSessionDownloadDelegate {
     private let base: String
